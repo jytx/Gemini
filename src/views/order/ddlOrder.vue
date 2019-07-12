@@ -54,7 +54,7 @@
               </Form-item>
               <Form-item>
                 <Button type="primary" @click="fetchStruct()">获取表结构信息</Button>
-                <Button type="error" @click="canel()" style="margin-left-percent-5">重置</Button>
+                <Button type="error" @click="canel()" class="margin-left-10">重置</Button>
               </Form-item>
               <FormItem label="工单提交说明:" prop="text">
                 <Input v-model="formItem.text" placeholder="请输入工单说明" type="textarea" :rows=4></Input>
