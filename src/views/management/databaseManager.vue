@@ -47,8 +47,8 @@
         </p>
         <Input v-model="query.connection_name" placeholder="请填写连接名" style="width: 20%" clearable></Input>
         <Input v-model="query.computer_room" placeholder="请填写环境" style="width: 20%" clearable></Input>
-        <Button @click="queryData" type="primary">查询</Button>
-        <Button @click="queryCancel" type="warning">重置</Button>
+        <Button @click="queryData" type="primary" class="margin-left-10">查询</Button>
+        <Button @click="queryCancel" type="warning" class="margin-left-10">重置</Button>
         <div class="edittable-con-1">
           <Table :columns="columns" :data="tableData">
             <template slot-scope="{ row }" slot="action">

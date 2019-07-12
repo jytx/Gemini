@@ -50,8 +50,8 @@
         </p>
         <Input v-model="query.user" placeholder="请填写用户名" style="width: 20%" clearable></Input>
         <Input v-model="query.department" placeholder="请填写部门" style="width: 20%" clearable></Input>
-        <Button @click="queryData" type="primary">查询</Button>
-        <Button @click="queryCancel" type="warning">重置</Button>
+        <Button @click="queryData" type="primary" class="margin-left-10">查询</Button>
+        <Button @click="queryCancel" type="warning" class="margin-left-10">重置</Button>
         <div class="edittable-con-1">
           <Table border :columns="columns" :data="tableData" stripe height="520">
             <template slot-scope="{ row }" slot="action">

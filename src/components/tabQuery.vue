@@ -1,3 +1,7 @@
+<style scoped>
+  @import "../styles/common.less";
+</style>
+
 <template>
   <div>
     <editor v-model="formItem.textarea" @init="editorInit" @setCompletions="setCompletions"></editor>
@@ -5,7 +9,7 @@
     <p>当前选择的库: {{dataBase}}</p>
     <br>
     <Button type="warning" icon="md-trash" @click.native="clearObj()">清除</Button>
-    <Button type="success" icon="ios-redo" @click.native="querySQL()">查询</Button>
+    <Button type="success" icon="ios-redo" @click.native="querySQL()" class="margin-left-10">查询</Button>
     <Button
       type="primary"
       icon="ios-cloud-download"

@@ -68,7 +68,7 @@ const store = new Vuex.Store({
     Menulist (state) {
       let accessCode = parseInt(sessionStorage.getItem('access')) // 0
       let menuList = []
-      appRouter.forEach((item, index) => {
+      appRouter.forEach((item) => {
         if (item.access !== undefined) { // item.access=0
           if (util.showThisRoute(item.access, accessCode)) {
             if (item.children.length <= 1) {

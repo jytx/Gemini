@@ -32,7 +32,7 @@
                   class="tree"
                 ></Tree>
                 <Button type="info" icon="md-brush" @click="openDrawer" ghost>快速提交</Button>
-                <Button type="error" icon="md-backspace" @click="deferReply" ghost>结束会话</Button>
+                <Button type="error" icon="md-backspace" @click="deferReply" ghost class="margin-left-percent-5">结束会话</Button>
               </div>
             </div>
           </div>

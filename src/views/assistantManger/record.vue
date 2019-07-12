@@ -21,7 +21,7 @@
           </FormItem>
           <FormItem>
             <Button type="success" @click="queryData">查询</Button>
-            <Button type="primary" @click="queryCancel">重置</Button>
+            <Button type="primary" @click="queryCancel" class="margin-left-10">重置</Button>
           </FormItem>
         </Form>
         <Row>
