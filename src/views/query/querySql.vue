@@ -313,10 +313,6 @@
         require('brace/theme/xcode')
       },
       handleTabsAdd () {
-        // if (this.tabs === 8) {
-        //   this.$Message.error('窗口创建数大于8,不得再创建！')
-        //   return
-        // }
         this.tabs++;
       },
       testSql () {
@@ -333,7 +329,7 @@
                 this.testRes = res.data;
                 let gen = 0;
                 this.testRes.forEach(vl => {
-                  if (vl.level !== 0) {
+                  if (vl.Level !== 0) {
                     gen += 1
                   }
                 });
