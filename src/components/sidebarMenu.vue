@@ -4,7 +4,7 @@
     <Menu width="auto" @on-select="currentPageTab" :active-name="currentPageName" accordion>
       <MenuItem name="main">
         <Row>
-          <Col span="12"><img src="../assets/logo_s.png" width="90%"> </Col>
+          <Col span="12"><img src="../assets/logo_s.png" width="90%"></Col>
           <Col span="12" style="font-weight: bold;font-size: 20px;padding-top: 20px;">Yearning</Col>
         </Row>
       </MenuItem>
@@ -40,78 +40,74 @@
   </div>
 </template>
 <script>
-  //
-  import util from '../libs/util'
-  import axios from 'axios'
+    //
+    import util from '../libs/util'
+    import axios from 'axios'
 
-  export default {
-    name: 'sidebarMenu',
-    props: {
-      menuList: Array,
-      iconSize: Number
-    },
-    data () {
-      return {
-        filtermenulist: {
-          'ddl': '',
-          'dml': '',
-          'indexedit': '',
-          'query': '1',
-          'management-user': '',
-          'management-database': '',
-          'audit-audit': '1',
-          'audit-record': '1',
-          'audit-permissions': '1',
-          'search_order': '1',
-          'query-review': '1',
-          'query-audit': '1',
-          'setting': '1',
-          'authGroup': '1'
+    export default {
+        name: 'sidebarMenu',
+        props: {
+            menuList: Array,
+            iconSize: Number
+        },
+        data() {
+            return {
+                filtermenulist: {
+                    'ddl': '',
+                    'dml': '',
+                    'indexedit': '',
+                    'query': '1',
+                    'management-user': '',
+                    'management-database': '',
+                    'audit-audit': '1',
+                    'audit-record': '1',
+                    'search_order': '1',
+                    'query-review': '1',
+                    'query-audit': '1',
+                    'setting': '0',
+                    'authGroup': '0',
+                    "perOrder": '0'
+                }
+            }
+        },
+        computed: {
+            currentPageName() {
+                return this.$store.state.currentPageName
+            }
+        },
+        methods: {
+            currentPageTab(val) {
+                if (val === 'login') {
+                    localStorage.removeItem('pageOpenedList');
+                    sessionStorage.clear();
+                    this.$router.push({
+                        name: 'login'
+                    })
+                } else {
+                    util.openPage(this, val)
+                }
+            }
+        },
+        created() {
+            axios.post(`${this.$config.url}/dash/initMenu`)
+                .then(res => {
+                    let c = res.data.c;
+                    let s = res.data.s;
+                    this.filtermenulist.ddl = c.ddl;
+                    this.filtermenulist.dml = c.dml;
+                    this.filtermenulist['management-user'] = c.user;
+                    this.filtermenulist['management-database'] = c.base;
+                    this.filtermenulist['query'] = c.query;
+                    this.filtermenulist.setting = s.setting;
+                    this.filtermenulist.authGroup = s.group;
+                    this.filtermenulist.perOrder = s.perOrder
+                })
         }
-      }
-    },
-    computed: {
-      currentPageName () {
-        return this.$store.state.currentPageName
-      }
-    },
-    methods: {
-      currentPageTab (val) {
-        if (val === 'login') {
-          localStorage.removeItem('pageOpenedList');
-          sessionStorage.clear();
-          this.$router.push({
-            name: 'login'
-          })
-        } else {
-          util.openPage(this, val)
-        }
-      }
-    },
-    created () {
-      axios.post(`${this.$config.url}/dash/initMenu`)
-        .then(res => {
-          let c = res.data.c;
-          let s = res.data.s;
-          this.filtermenulist.ddl = c.ddl;
-          this.filtermenulist.dml = c.dml;
-          this.filtermenulist['management-user'] = c.user;
-          this.filtermenulist['management-database'] = c.base;
-          this.filtermenulist['query'] = c.query;
-          this.filtermenulist.setting = s.setting;
-          this.filtermenulist.authGroup = s.group
-        })
     }
-  }
 </script>
 
 <style>
   span {
     font-weight: bold;
-  }
-  .f-log {
-    font-weight: bold;
-    font-size: 30px;
-    padding: 16px 6px 0;
   }
 </style>

@@ -24,57 +24,61 @@
           </div>
         </div>
       </div>
-      <div class="unlock-locking-tip-con">已锁定</div>
+      <div class="unlock-locking-tip-con"><Checkbox v-model="single">LDAP登录</Checkbox>    已锁定</div>
     </div>
   </transition>
 </template>
 
 <script>
-  // ;
-  import axios from 'axios'
-  import util from '../libs/util'
+    // ;
+    import axios from 'axios'
 
-  export default {
-    name: 'Unlock',
-    data () {
-      return {
-        avatorLeft: '0px',
-        inputLeft: '400px',
-        password: ''
-      }
-    },
-    props: {
-      showUnlock: {
-        type: Boolean,
-        default: false
-      }
-    },
-    methods: {
-      handleClickAvator () {
-        this.avatorLeft = '-180px'
-        this.inputLeft = '0px'
-        this.$refs.inputEle.focus()
-      },
-      handleUnlock () {
-        axios.post(util.auth, {
-          'username': sessionStorage.getItem('user'),
-          'password': this.password
-        })
-          .then(() => {
-            this.avatorLeft = '0px'
-            this.inputLeft = '400px'
-            this.password = ''
-            this.$store.commit('unlock')
-            this.$emit('on-unlock')
-          })
-          .catch(err => this.$config.auth_notice(err))
-      },
-      unlockMousedown () {
-        this.$refs.unlockBtn.className = 'unlock-btn click-unlock-btn'
-      },
-      unlockMouseup () {
-        this.$refs.unlockBtn.className = 'unlock-btn'
-      }
+    export default {
+        name: 'Unlock',
+        data() {
+            return {
+                avatorLeft: '0px',
+                inputLeft: '400px',
+                password: '',
+                single: false
+            }
+        },
+        props: {
+            showUnlock: {
+                type: Boolean,
+                default: false
+            }
+        },
+        methods: {
+            handleClickAvator() {
+                this.avatorLeft = '-180px'
+                this.inputLeft = '0px'
+                this.$refs.inputEle.focus()
+            },
+            handleUnlock() {
+                let url = this.$config.auth;
+                if (this.single === true) {
+                    url = `${this.$config.gen}/ldap`
+                }
+                axios.post(url, {
+                    'username': sessionStorage.getItem('user'),
+                    'password': this.password
+                })
+                    .then(() => {
+                        this.avatorLeft = '0px'
+                        this.inputLeft = '400px'
+                        this.password = ''
+                        this.$store.commit('unlock')
+                        this.$emit('on-unlock')
+                    })
+                    .catch(err => this.$config.auth_notice(err))
+            },
+            unlockMousedown() {
+                this.$refs.unlockBtn.className = 'unlock-btn click-unlock-btn'
+            },
+            unlockMouseup() {
+                this.$refs.unlockBtn.className = 'unlock-btn'
+            }
+        }
     }
-  }
 </script>

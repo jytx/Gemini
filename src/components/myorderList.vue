@@ -97,17 +97,16 @@
                     {
                         title: 'sql语句',
                         key: 'SQL',
-                        tooltip: true
+
                     },
                     {
                         title: '状态',
                         key: 'State',
-                        width: 250
                     },
                     {
                         title: '错误信息',
                         key: 'Error',
-                        width: 400
+                        tooltip: true
                     },
                     {
                         title: '影响行数',
@@ -117,7 +116,6 @@
                     {
                         title: '执行时间/秒',
                         key: 'Time',
-                        width: 200
                     }
                 ],
                 TableDataNew: [],

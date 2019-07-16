@@ -180,7 +180,7 @@
               <Alert style="margin-left: 5%" type="warning" show-icon>
                 注意事项：
                 <template slot="desc">
-                  1.由于各个邮件服务提供商对于垃圾邮件过滤的机制各不相同，可能会造成邮件无法接收的情况。所以使用前请测试是否稳定,推荐使用搜狐
+                  1.由于各个邮件服务提供商对于垃圾邮件过滤的机制各不相同，可能会造成邮件无法接收的情况。所以使用前请测试是否稳定。
                   <br>
                   2.只有开启相应的消息推送开关后，消息推送才会开启。
                   <br>
@@ -215,7 +215,7 @@
               <span slot="close">关</span>
             </i-switch>
           </FormItem>
-          <FormItem label="inert语句字段上限">
+          <FormItem label="Insert语句字段上限">
             <Input v-model="juno.DMLMaxInsertRows" type="number"></Input>
           </FormItem>
           <FormItem label="检查dml语句where条件">

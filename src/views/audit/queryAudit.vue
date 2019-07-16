@@ -39,7 +39,7 @@
               <template slot-scope="{ row }" slot="action">
                 <Button type="error" size="small" @click="stop_query(row)" v-if="row.QueryPer === 1" ghost>终止查询</Button>
                 <Button type="error" @click="reject(row)" v-if="row.QueryPer === 2" ghost size="small">驳回</Button>
-                <Button type="success" @click="savedata(row)" v-if="row.QueryPer === 2" ghost size="small">同意</Button>
+                <Button type="success" @click="savedata(row)" v-if="row.QueryPer === 2" ghost size="small" class="margin-left-10">同意</Button>
               </template>
             </Table>
             <br>
@@ -187,12 +187,8 @@
             this.$config.err_notice(this, error)
           })
       },
-      reject () {
-        axios.put(`${this.$config.url}/query_worklf/`,
-          {
-            'mode': 'disagree',
-            'work_id': this.query.work_id
-          })
+      reject (row) {
+        axios.post(`${this.$config.url}/audit/query/disagreed`, {'WorkId': row.WorkId})
           .then(res => {
             this.$config.notice(res.data)
             this.editInfodModal = false

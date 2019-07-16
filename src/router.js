@@ -156,15 +156,6 @@ export const appRouter = [{
           require(['./views/audit/sqlAudit.vue'], resolve)
         }
       },
-      // {
-      //   path: 'audit-permissions',
-      //   name: 'audit-permissions',
-      //   title: '权限',
-      //   icon: 'md-share',
-      //   component: resolve => {
-      //     require(['./views/audit/permissions.vue'], resolve)
-      //   }
-      // },
       {
         path: 'query-audit',
         name: 'query-audit',
@@ -172,6 +163,15 @@ export const appRouter = [{
         icon: 'logo-rss',
         component: resolve => {
           require(['./views/audit/queryAudit.vue'], resolve)
+        }
+      },
+      {
+        path: 'perOrder',
+        name: 'perOrder',
+        title: '权限',
+        icon: 'md-share',
+        component: resolve => {
+          require(['./views/audit/permissions.vue'], resolve)
         }
       }
     ]
