@@ -234,7 +234,7 @@
         },
         methods: {
             referRuleOrder() {
-                axios.post(`${this.$config.url}/rules/refer`, {
+                axios.post(`${this.$config.url}/dash/refer`, {
                     'Permission': this.permission
                 })
                     .then(res => {
