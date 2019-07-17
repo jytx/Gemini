@@ -54,10 +54,10 @@
             <template slot-scope="{ row }" slot="action">
               <Button type="info" size="small" @click="viewConnectionModal(row)" style="margin-right: 5px">详细信息</Button>
               <Poptip
-                confirm
-                title="删除数据源将会删除对应的所有工单信息,确定要删除吗？"
-                @on-ok="delConnection(row)"
-                transfer
+                      confirm
+                      title="删除数据源将会删除对应的所有工单信息,确定要删除吗？"
+                      @on-ok="delConnection(row)"
+                      transfer
               >
                 <Button type="warning" size="small">删除</Button>
               </Poptip>
@@ -96,168 +96,171 @@
   </div>
 </template>
 <script>
-  import '../../styles/tablesmargintop.css'
-  import axios from 'axios'
+    import '../../styles/tablesmargintop.css'
+    import axios from 'axios'
 
-  export default {
-    name: 'sqlist',
-    data () {
-      return {
-        tableData: [],
-        columns: [
-          {
-            title: '连接名称',
-            key: 'Source'
-          },
-          {
-            title: '数据库地址',
-            key: 'IP'
-          },
-          {
-            title: '环境',
-            key: 'IDC'
-          },
-          {
-            title: '操作',
-            key: 'action',
-            width: 300,
-            slot: 'action'
-          }
-        ],
-        // 添加数据库信息
-        formItem: {
-          name: '',
-          ip: '',
-          add: '',
-          username: '',
-          password: '',
-          port: ''
+    export default {
+        name: 'sqlist',
+        data() {
+            return {
+                tableData: [],
+                columns: [
+                    {
+                        title: '连接名称',
+                        key: 'Source'
+                    },
+                    {
+                        title: '数据库地址',
+                        key: 'IP'
+                    },
+                    {
+                        title: '环境',
+                        key: 'IDC'
+                    },
+                    {
+                        title: '操作',
+                        key: 'action',
+                        width: 300,
+                        slot: 'action'
+                    }
+                ],
+                // 添加数据库信息
+                formItem: {
+                    name: '',
+                    ip: '',
+                    add: '',
+                    username: '',
+                    password: '',
+                    port: ''
+                },
+                // 添加表单验证规则
+                ruleInline: {
+                    name: [{
+                        required: true,
+                        message: '请填写连接名称',
+                        trigger: 'blur'
+                    }],
+                    ip: [{
+                        required: true,
+                        message: '请填写连接地址',
+                        trigger: 'blur'
+                    }],
+                    username: [{
+                        required: true,
+                        message: '请填写用户名',
+                        trigger: 'blur'
+                    }],
+                    port: [{
+                        required: true,
+                        message: '请填写端口',
+                        trigger: 'blur'
+                    }],
+                    password: [{
+                        required: true,
+                        message: '请填写密码',
+                        trigger: 'blur'
+                    }]
+                },
+                comList: [],
+                pagenumber: 1,
+                baseinfo: false,
+                editbaseinfo: {},
+                query: {
+                    computer_room: '',
+                    connection_name: '',
+                    valve: false
+                }
+            }
         },
-        // 添加表单验证规则
-        ruleInline: {
-          name: [{
-            required: true,
-            message: '请填写连接名称',
-            trigger: 'blur'
-          }],
-          ip: [{
-            required: true,
-            message: '请填写连接地址',
-            trigger: 'blur'
-          }],
-          username: [{
-            required: true,
-            message: '请填写用户名',
-            trigger: 'blur'
-          }],
-          port: [{
-            required: true,
-            message: '请填写端口',
-            trigger: 'blur'
-          }],
-          password: [{
-            required: true,
-            message: '请填写密码',
-            trigger: 'blur'
-          }]
+        methods: {
+            resetForm() {
+                this.formItem = this.$config.clearObj(this.formItem)
+            },
+            testConnection() {
+                axios.put(`${this.$config.url}/management_db/test`, {
+                    'ip': this.formItem.ip,
+                    'user': this.formItem.username,
+                    'password': this.formItem.password,
+                    'port': parseInt(this.formItem.port)
+                })
+                    .then(res => {
+                        this.$config.notice(res.data)
+                    })
+                    .catch(error => {
+                        this.$config.err_notice(this, error)
+                    })
+            },
+            addConnection() {
+                this.$refs['formValidate'].validate((valid) => {
+                    if (valid) {
+                        axios.post(`${this.$config.url}/management_db/add`, {
+                            'source': this.formItem.name,
+                            'idc': this.formItem.add,
+                            'ip': this.formItem.ip,
+                            'user': this.formItem.username,
+                            'password': this.formItem.password,
+                            'port': parseInt(this.formItem.port)
+                        })
+                            .then(res => {
+                                this.$config.notice(res.data);
+                                this.getPageInfo(this.$refs.page.currentPage);
+                                this.$refs['formValidate'].resetFields()
+                            })
+                            .catch(error => {
+                                this.$config.err_notice(this, error)
+                            })
+                        this.reset()
+                    }
+                })
+            },
+            viewConnectionModal(row) {
+                this.baseinfo = true;
+                this.editbaseinfo = row
+            },
+            delConnection(vl) {
+                let step = this.$refs.page.currentPage;
+                if (this.tableData.length === 1) {
+                    step = step - 1
+                }
+                axios.delete(`${this.$config.url}/management_db/del/${vl.Source}`)
+                    .then(res => {
+                        this.$config.notice(res.data);
+                        this.getPageInfo(step)
+                    })
+                    .catch(error => {
+                        this.$config.err_notice(this, error)
+                    })
+            },
+            getPageInfo(vl = 1) {
+                axios.get(`${this.$config.url}/management_db/fetch/?page=${vl}&permissions_type=base&con=${JSON.stringify(this.query)}`)
+                    .then(res => {
+                        this.tableData = res.data.data
+                        this.pagenumber = parseInt(res.data.page)
+                        this.comList = res.data.custom
+                    })
+                    .catch(error => {
+                        this.$config.err_notice(this, error)
+                    })
+            },
+            modifyBase() {
+                this.editbaseinfo.Port = parseInt(this.editbaseinfo.Port)
+                axios.put(`${this.$config.url}/management_db/edit`, {
+                    'data': this.editbaseinfo
+                })
+                    .then(res => this.$config.notice(res.data))
+                    .catch(err => this.$config.err_notice(this, err))
+            },
+            queryData() {
+                this.query.valve = true;
+                this.getPageInfo()
+            },
+            queryCancel() {
+                this.$config.clearObj(this.query)
+                this.getPageInfo()
+            }
         },
-        comList: [],
-        pagenumber: 1,
-        baseinfo: false,
-        editbaseinfo: {},
-        query: {
-          computer_room: '',
-          connection_name: '',
-          valve: false
+        mounted() {
+            this.getPageInfo()
         }
-      }
-    },
-    methods: {
-      resetForm () {
-        this.formItem = this.$config.clearObj(this.formItem)
-      },
-      testConnection () {
-        axios.put(`${this.$config.url}/management_db/test`, {
-          'ip': this.formItem.ip,
-          'user': this.formItem.username,
-          'password': this.formItem.password,
-          'port': parseInt(this.formItem.port)
-        })
-          .then(res => {
-            this.$config.notice(res.data)
-          })
-          .catch(error => {
-            this.$config.err_notice(this, error)
-          })
-      },
-      addConnection () {
-        this.$refs['formValidate'].validate((valid) => {
-          if (valid) {
-            axios.post(`${this.$config.url}/management_db/add`, {
-              'source': this.formItem.name,
-              'idc': this.formItem.add,
-              'ip': this.formItem.ip,
-              'user': this.formItem.username,
-              'password': this.formItem.password,
-              'port': parseInt(this.formItem.port)
-            })
-              .then(res => {
-                this.$config.notice(res.data);
-                this.getPageInfo(this.$refs.page.currentPage);
-                this.$refs['formValidate'].resetFields()
-              })
-              .catch(error => {
-                this.$config.err_notice(this, error)
-              })
-            this.reset()
-          }
-        })
-      },
-      viewConnectionModal (row) {
-        this.baseinfo = true;
-        this.editbaseinfo = row
-      },
-      delConnection (vl) {
-        let step = this.$refs.page.currentPage;
-        if (this.tableData.length === 1) {
-          step = step - 1
-        }
-        axios.delete(`${this.$config.url}/management_db/del/${vl.Source}`)
-          .then(res => {
-            this.$config.notice(res.data);
-            this.getPageInfo(step)
-          })
-          .catch(error => {
-            this.$config.err_notice(this, error)
-          })
-      },
-      getPageInfo (vl = 1) {
-        axios.get(`${this.$config.url}/management_db/fetch/?page=${vl}&permissions_type=base&con=${JSON.stringify(this.query)}`)
-          .then(res => {
-            [this.tableData, this.pagenumber, this.comList] = [res.data.data, parseInt(res.data.page), res.data.custom]
-          })
-          .catch(error => {
-            this.$config.err_notice(this, error)
-          })
-      },
-      modifyBase () {
-        axios.put(`${this.$config.url}/management_db/update`, {
-          'data': JSON.stringify(this.editbaseinfo)
-        })
-          .then(res => this.$config.notice(res.data))
-          .catch(err => this.$config.err_notice(this, err))
-      },
-      queryData () {
-        this.query.valve = true;
-        this.getPageInfo()
-      },
-      queryCancel () {
-        this.$config.clearObj(this.query)
-        this.getPageInfo()
-      }
-    },
-    mounted () {
-      this.getPageInfo()
     }
-  }
 </script>
