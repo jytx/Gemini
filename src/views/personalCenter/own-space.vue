@@ -53,10 +53,10 @@
       <h3 slot="header" style="color:#2D8CF0">邮箱/真实姓名修改</h3>
       <Form :label-width="100" label-position="right">
         <FormItem label="邮箱地址">
-          <Input v-model="editEmailForm.email"></Input>
+          <Input v-model="editEmailForm.Email"></Input>
         </FormItem>
         <FormItem label="真实姓名">
-          <Input v-model="editEmailForm.real_name"></Input>
+          <Input v-model="editEmailForm.RealName"></Input>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -275,9 +275,9 @@
             saveEmail() {
                 this.savePassLoading = true;
                 axios.post(`${this.$config.url}/user/mail_reset`, {
-                    'mail': this.editEmailForm.email,
-                    'username': this.userForm.username,
-                    'real': this.editEmailForm.real_name
+                    'mail': this.editEmailForm.Email,
+                    'username': this.userForm.UserName,
+                    'real': this.editEmailForm.RealName
                 })
                     .then(res => {
                         this.$config.notice(res.data)
