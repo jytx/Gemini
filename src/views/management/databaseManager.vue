@@ -12,8 +12,8 @@
         </p>
         <div class="edittable-testauto-con">
           <Form ref="formValidate" :model="formItem" :label-width="100" :rules="ruleInline">
-            <Form-item label="环境:">
-              <Select v-model="formItem.add" placeholder="请选择">
+            <Form-item label="环境:" prop="add">
+              <Select v-model="formItem.add">
                 <Option v-for="list in comList" :value="list" :key="list">{{ list }}</Option>
               </Select>
             </Form-item>
@@ -31,6 +31,12 @@
             </Form-item>
             <Form-item label="密码:" prop="password">
               <Input v-model="formItem.password" placeholder="请输入" type="password"></Input>
+            </Form-item>
+            <Form-item label="查询数据源:">
+              <RadioGroup v-model="formItem.isquery">
+                <Radio :label="1">是</Radio>
+                <Radio :label="0">否</Radio>
+              </RadioGroup>
             </Form-item>
             <Button type="info" @click="testConnection()">测试连接</Button>
             <Button type="success" @click="addConnection()" style="margin-left: 5%">确定</Button>
@@ -51,6 +57,10 @@
         <Button @click="queryCancel" type="warning" class="margin-left-10">重置</Button>
         <div class="edittable-con-1">
           <Table :columns="columns" :data="tableData">
+            <template slot-scope="{ row }" slot="is_query">
+              <Tag checkable color="primary" v-if="row.IsQuery === '否'">{{row.IsQuery}}</Tag>
+              <Tag checkable color="success" v-if="row.IsQuery === '是'">{{row.IsQuery}}</Tag>
+            </template>
             <template slot-scope="{ row }" slot="action">
               <Button type="info" size="small" @click="viewConnectionModal(row)" style="margin-right: 5px">详细信息</Button>
               <Poptip
@@ -110,6 +120,11 @@
                         key: 'Source'
                     },
                     {
+                        title: '查询数据源',
+                        key: 'IsQuery',
+                        slot: 'is_query'
+                    },
+                    {
                         title: '数据库地址',
                         key: 'IP'
                     },
@@ -126,6 +141,7 @@
                 ],
                 // 添加数据库信息
                 formItem: {
+                    isquery: 0,
                     name: '',
                     ip: '',
                     add: '',
@@ -135,6 +151,9 @@
                 },
                 // 添加表单验证规则
                 ruleInline: {
+                    add: [
+                        {required: true, message: '请选择对应环境', trigger: 'change'}
+                    ],
                     name: [{
                         required: true,
                         message: '请填写连接名称',
@@ -199,7 +218,8 @@
                             'ip': this.formItem.ip,
                             'user': this.formItem.username,
                             'password': this.formItem.password,
-                            'port': parseInt(this.formItem.port)
+                            'port': parseInt(this.formItem.port),
+                            'isQuery': this.formItem.isquery
                         })
                             .then(res => {
                                 this.$config.notice(res.data);
@@ -234,9 +254,12 @@
             getPageInfo(vl = 1) {
                 axios.get(`${this.$config.url}/management_db/fetch/?page=${vl}&permissions_type=base&con=${JSON.stringify(this.query)}`)
                     .then(res => {
-                        this.tableData = res.data.data
-                        this.pagenumber = parseInt(res.data.page)
-                        this.comList = res.data.custom
+                        this.tableData = res.data.data;
+                        this.pagenumber = parseInt(res.data.page);
+                        this.comList = res.data.custom;
+                        this.tableData.forEach((item) => {
+                            (item.IsQuery === 1) ? item.IsQuery = '是' : item.IsQuery = '否'
+                        })
                     })
                     .catch(error => {
                         this.$config.err_notice(this, error)

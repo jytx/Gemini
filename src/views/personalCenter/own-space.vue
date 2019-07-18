@@ -106,7 +106,7 @@
           </FormItem>
           <FormItem label="可访问的连接名:" v-if="permission.query === '1'">
             <CheckboxGroup v-model="permission.query_source">
-              <Checkbox v-for="i in connectionList" :label="i.Source" :key="i.Source">
+              <Checkbox v-for="i in query_list" :label="i.Source" :key="i.Source">
                 <Tag color="geekblue" :key="i.Source"> {{i.Source}}</Tag>
               </Checkbox>
             </CheckboxGroup>
@@ -158,6 +158,7 @@
                 }
             }
             return {
+                query_list: [],
                 editEmailModal: false,
                 editEmailForm: {
                     mail: '',
@@ -295,6 +296,7 @@
                         this.userForm = res.data.u;
                         this.permission = res.data.p;
                         this.connectionList = res.data.source;
+                        this.query_list = res.data.query;
                         this.auditor = res.data.au;
                         if (res.data.s.Stmt === 0) {
                             this.$store.state.stmt = true

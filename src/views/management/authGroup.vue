@@ -105,7 +105,7 @@
                 </Checkbox>
               </div>
               <CheckboxGroup v-model="permission.query_source">
-                <Checkbox v-for="i in connectionList.connection" :label="i.Source" :key="i.Source">
+                <Checkbox v-for="i in connectionList.query" :label="i.Source" :key="i.Source">
                   <Tag color="blue" :key="i.Source"> {{i.Source}}</Tag>
                 </Checkbox>
               </CheckboxGroup>
@@ -213,7 +213,8 @@
                 },
                 connectionList: {
                     connection: [],
-                    person: []
+                    person: [],
+                    query: []
                 },
                 addAuthGroupForm: {
                     groupname: '',
@@ -285,6 +286,7 @@
                         this.more_user = k;
                         this.pagenumber = parseInt(res.data.page);
                         this.connectionList.connection = res.data.source;
+                        this.connectionList.query = res.data.query;
                         this.connectionList.person = res.data.audit;
                     })
                     .catch(error => {
