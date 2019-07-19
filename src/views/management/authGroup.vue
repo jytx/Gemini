@@ -8,6 +8,9 @@
         </p>
         <div>
           <Button type="primary" @click="batchOpen">普通用户批量赋权</Button>
+          <Input v-model="query.username" placeholder="请填写用户名" style="width: 15%" clearable class="margin-left-10"></Input>
+          <Button @click="queryData" type="success" class="margin-left-10">查询</Button>
+          <Button @click="queryCancel" type="warning" class="margin-left-10">重置</Button>
           <br>
           <br>
           <Table border :columns="columns" :data="data6" stripe height="550">
@@ -157,8 +160,6 @@
 
 <script>
     import axios from 'axios'
-    import '../../styles/tablesmargintop.css'
-
     const structure = {
         ddl: '0',
         ddlsource: [],
@@ -174,6 +175,10 @@
         name: 'auth-group',
         data() {
             return {
+                query: {
+                    username: '',
+                    valve: false
+                },
                 more_user: [],
                 is_more: false,
                 isReadOnly: false,
@@ -274,7 +279,7 @@
                 this.addAuthGroupModal = false
             },
             refreshgroup(vl = 1) {
-                axios.get(`${this.$config.url}/group?page=${vl}`)
+                axios.get(`${this.$config.url}/group?page=${vl}&con=${JSON.stringify(this.query)}`)
                     .then(res => {
                         let k = [];
                         this.data6 = res.data.data;
@@ -316,6 +321,14 @@
                         this.refreshgroup()
                     })
                     .catch(err => this.$config.err_notice(this, err))
+            },
+            queryData() {
+                this.query.valve = true;
+                this.refreshgroup()
+            },
+            queryCancel() {
+                this.$config.clearObj(this.query);
+                this.refreshgroup()
             }
         },
         mounted() {
@@ -324,5 +337,6 @@
     }
 </script>
 
-<style scoped>
+<style scoped lang="less">
+  @import '../../styles/common.less';
 </style>

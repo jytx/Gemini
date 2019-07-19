@@ -137,35 +137,40 @@
                     <Button icon="ios-plus-empty" type="dashed" size="small" @click="handleAdd1">添加脱敏字段</Button>
                   </FormItem>
                   <Row>
-                    <Col span="11">
-                      <Form-item label="多级审核开关:">
+                    <Col span="8">
+                      <Form-item label="多级审核:">
                         <i-switch size="large" @on-change="multi_switching" v-model="other.multi">
                           <span slot="open">开</span>
                           <span slot="close">关</span>
                         </i-switch>
                       </Form-item>
                     </Col>
-                    <Col span="11">
-                      <Form-item label="查询审核开关:">
+                    <Col span="8">
+                      <Form-item label="查询审核:">
                         <i-switch size="large" @on-change="multi_query" v-model="other.query">
                           <span slot="open">开</span>
                           <span slot="close">关</span>
                         </i-switch>
                       </Form-item>
                     </Col>
+                    <Col span="8">
+                      <Form-item label="权限申请限制:">
+                        <InputNumber :max="10" :min="1" v-model="other.per_order"
+                                     :formatter="value => `${value}次/每天`"></InputNumber>
+                      </Form-item>
+                    </Col>
                   </Row>
-
                   <Row>
-                    <Col span="11">
-                      <Form-item label="注册开关:">
+                    <Col span="8">
+                      <Form-item label="注册:">
                         <i-switch size="large" @on-change="multi_register" v-model="other.register">
                           <span slot="open">开</span>
                           <span slot="close">关</span>
                         </i-switch>
                       </Form-item>
                     </Col>
-                    <Col span="11">
-                      <Form-item label="查询导出开关:">
+                    <Col span="8">
+                      <Form-item label="查询导出:">
                         <i-switch size="large" @on-change="multi_export" v-model="other.export">
                           <span slot="open">开</span>
                           <span slot="close">关</span>
@@ -201,11 +206,11 @@
     </Row>
 
     <Drawer
-      title="审核引擎规则设置"
-      v-model="this.sw"
-      width="720"
-      :closable="false"
-      @on-close="cl"
+            title="审核引擎规则设置"
+            v-model="this.sw"
+            width="720"
+            :closable="false"
+            @on-close="cl"
     >
       <Form :label-width="180">
         <Col span="8">
@@ -360,142 +365,143 @@
 
 <script>
 
-  import axios from 'axios'
+    import axios from 'axios'
 
-  export default {
-    name: 'Setting',
-    data () {
-      return {
-        juno: {
-          DMLMaxInsertRows: 0
+    export default {
+        name: 'Setting',
+        data() {
+            return {
+                juno: {
+                    DMLMaxInsertRows: 0
+                },
+                sw: false,
+                ldap: Object,
+                message: Object,
+                other: {
+                    limit: 0,
+                    per_order: 0
+                }
+            }
         },
-        sw: false,
-        ldap: Object,
-        message: Object,
-        other: {
-          limit: 0
+        methods: {
+            cl() {
+                this.sw = false
+            },
+            openDrawer() {
+                this.sw = true
+            },
+            handleAdd() {
+                this.other.idc.push(this.other.foce)
+                this.other.foce = ''
+            },
+            handleAdd1() {
+                this.other.insulate_word_list.push(this.other.sensitive);
+                this.other.sensitive = ''
+            },
+            handleAdd_exclued_db() {
+                this.other.exclude_db_list.push(this.other.exclued_db)
+                this.other.exclued_db = ''
+            },
+            handleClose2(event, name) {
+                const index = this.other.idc.indexOf(name)
+                this.other.idc.splice(index, 1)
+            },
+            handleClose3(event, name) {
+                const index = this.other.insulate_word_list.indexOf(name)
+                this.other.insulate_word_list.splice(index, 1)
+            },
+            handleClose_exclued_db(event, name) {
+                const index = this.other.exclude_db_list.indexOf(name)
+                this.other.exclude_db_list.splice(index, 1)
+            },
+            multi_switching(status) {
+                this.other.multi = status
+            },
+            multi_register(status) {
+                this.other.register = status
+            },
+            multi_export(status) {
+                this.other.export = status
+            },
+            multi_query(status) {
+                this.other.query = status
+            },
+            dingding_switching(status) {
+                this.message.ding = status
+            },
+            mail_switching(status) {
+                this.message.mail = status
+            },
+            ldap_test() {
+                axios.put(`${this.$config.url}/group/setting/test/ldap`, {
+                    'ldap': this.ldap
+                })
+                    .then(res => {
+                        this.$config.notice(res.data)
+                    })
+                    .catch(error => {
+                        this.$config.err_notice(this, error)
+                    })
+            },
+            dingding_test() {
+                this.message.port = parseInt(this.message.port);
+                axios.put(`${this.$config.url}/group/setting/test/ding`, {
+                    'mail': this.message
+                })
+                    .then(res => {
+                        this.$config.notice(res.data)
+                    })
+                    .catch(error => {
+                        this.$config.err_notice(this, error)
+                    })
+            },
+            mail_test() {
+                this.message.port = parseInt(this.message.port);
+                axios.put(`${this.$config.url}/group/setting/test/mail`, {
+                    'mail': this.message
+                })
+                    .then(res => {
+                        this.$config.notice(res.data)
+                    })
+                    .catch(error => {
+                        this.$config.err_notice(this, error)
+                    })
+            },
+            save_upload() {
+                this.juno.DMLMaxInsertRows = parseInt(this.juno.DMLMaxInsertRows);
+                this.juno.DDLMaxKeyParts = parseInt(this.juno.DDLMaxKeyParts);
+                this.juno.DDLMaxKey = parseInt(this.juno.DDLMaxKey);
+                this.juno.DDLMaxCharLength = parseInt(this.juno.DDLMaxCharLength);
+                this.juno.MaxTableNameLen = parseInt(this.juno.MaxTableNameLen);
+                this.juno.MaxAffectRows = parseInt(this.juno.MaxAffectRows);
+                this.message.port = parseInt(this.message.port);
+                axios.post(`${this.$config.url}/group/setting/add`, {
+                    'ldap': this.ldap,
+                    'message': this.message,
+                    'other': this.other,
+                    'juno': this.juno
+                })
+                    .then(res => {
+                        this.$config.notice(res.data)
+                    })
+                    .catch(error => {
+                        this.$config.err_notice(this, error)
+                    })
+            }
+        },
+        mounted() {
+            axios.get(`${this.$config.url}/group/setting`)
+                .then(res => {
+                    this.message = res.data.Message;
+                    this.other = res.data.Other;
+                    this.ldap = res.data.Ldap;
+                    this.juno = res.data.AuditRole
+                })
+                .catch(error => {
+                    this.$config.err_notice(this, error)
+                })
         }
-      }
-    },
-    methods: {
-      cl () {
-        this.sw = false
-      },
-      openDrawer () {
-        this.sw = true
-      },
-      handleAdd () {
-        this.other.idc.push(this.other.foce)
-        this.other.foce = ''
-      },
-      handleAdd1 () {
-        this.other.insulate_word_list.push(this.other.sensitive);
-        this.other.sensitive = ''
-      },
-      handleAdd_exclued_db () {
-        this.other.exclude_db_list.push(this.other.exclued_db)
-        this.other.exclued_db = ''
-      },
-      handleClose2 (event, name) {
-        const index = this.other.idc.indexOf(name)
-        this.other.idc.splice(index, 1)
-      },
-      handleClose3 (event, name) {
-        const index = this.other.insulate_word_list.indexOf(name)
-        this.other.insulate_word_list.splice(index, 1)
-      },
-      handleClose_exclued_db (event, name) {
-        const index = this.other.exclude_db_list.indexOf(name)
-        this.other.exclude_db_list.splice(index, 1)
-      },
-      multi_switching (status) {
-        this.other.multi = status
-      },
-      multi_register (status) {
-        this.other.register = status
-      },
-      multi_export (status) {
-        this.other.export = status
-      },
-      multi_query (status) {
-        this.other.query = status
-      },
-      dingding_switching (status) {
-        this.message.ding = status
-      },
-      mail_switching (status) {
-        this.message.mail = status
-      },
-      ldap_test () {
-        axios.put(`${this.$config.url}/group/setting/test/ldap`, {
-          'ldap': this.ldap
-        })
-          .then(res => {
-            this.$config.notice(res.data)
-          })
-          .catch(error => {
-            this.$config.err_notice(this, error)
-          })
-      },
-      dingding_test () {
-        this.message.port = parseInt(this.message.port);
-        axios.put(`${this.$config.url}/group/setting/test/ding`, {
-          'mail': this.message
-        })
-          .then(res => {
-            this.$config.notice(res.data)
-          })
-          .catch(error => {
-            this.$config.err_notice(this, error)
-          })
-      },
-      mail_test () {
-        this.message.port = parseInt(this.message.port);
-        axios.put(`${this.$config.url}/group/setting/test/mail`, {
-          'mail': this.message
-        })
-          .then(res => {
-            this.$config.notice(res.data)
-          })
-          .catch(error => {
-            this.$config.err_notice(this, error)
-          })
-      },
-      save_upload () {
-        this.juno.DMLMaxInsertRows = parseInt(this.juno.DMLMaxInsertRows);
-        this.juno.DDLMaxKeyParts = parseInt(this.juno.DDLMaxKeyParts);
-        this.juno.DDLMaxKey = parseInt(this.juno.DDLMaxKey);
-        this.juno.DDLMaxCharLength = parseInt(this.juno.DDLMaxCharLength);
-        this.juno.MaxTableNameLen = parseInt(this.juno.MaxTableNameLen);
-        this.juno.MaxAffectRows = parseInt(this.juno.MaxAffectRows);
-        this.message.port = parseInt(this.message.port);
-        axios.post(`${this.$config.url}/group/setting/add`, {
-          'ldap': this.ldap,
-          'message': this.message,
-          'other': this.other,
-          'juno': this.juno
-        })
-          .then(res => {
-            this.$config.notice(res.data)
-          })
-          .catch(error => {
-            this.$config.err_notice(this, error)
-          })
-      }
-    },
-    mounted () {
-      axios.get(`${this.$config.url}/group/setting`)
-        .then(res => {
-          this.message = res.data.Message;
-          this.other = res.data.Other;
-          this.ldap = res.data.Ldap;
-          this.juno = res.data.AuditRole
-        })
-        .catch(error => {
-          this.$config.err_notice(this, error)
-        })
     }
-  }
 </script>
 
 <style scoped>

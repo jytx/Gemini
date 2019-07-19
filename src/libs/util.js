@@ -127,7 +127,10 @@ util.clearObj = function (obj) {
             obj[i] = ''
         } else if (typeof obj[i] === 'number') {
             obj[i] = 0
-        } else {
+        }  else if (typeof obj[i] === 'boolean') {
+            obj[i] = false
+        }
+        else {
             obj[i] = false
         }
     }

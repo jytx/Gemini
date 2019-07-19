@@ -226,7 +226,8 @@
                     index: '0',
                     indexcon: Array,
                     user: '0',
-                    base: '0'
+                    base: '0',
+                    auditor: []
                 },
                 permission_list: Object,
                 connectionList: {},
@@ -295,6 +296,7 @@
                     .then(res => {
                         this.userForm = res.data.u;
                         this.permission = res.data.p;
+                        this.permission.auditor = ['admin'];
                         this.connectionList = res.data.source;
                         this.query_list = res.data.query;
                         this.auditor = res.data.au;

@@ -51,8 +51,14 @@
           <Icon type="md-apps"/>
           数据库详情表
         </p>
-        <Input v-model="query.connection_name" placeholder="请填写连接名" style="width: 20%" clearable></Input>
-        <Input v-model="query.computer_room" placeholder="请填写环境" style="width: 20%" clearable></Input>
+        <Input v-model="query.connection_name" placeholder="请填写连接名" style="width: 15%" clearable></Input>
+        <Select v-model="query.computer_room"  placeholder="请填写环境" style="width: 15%" class="margin-left-10">
+          <Option v-for="list in comList" :value="list" :key="list" >{{ list }}</Option>
+        </Select>
+        <Select v-model="query.isQuery" style="width: 15%" class="margin-left-10"  placeholder="是否为查询数据源">
+          <Option :value="1" label="是"></Option>
+          <Option :value="0" label="否"></Option>
+        </Select>
         <Button @click="queryData" type="primary" class="margin-left-10">查询</Button>
         <Button @click="queryCancel" type="warning" class="margin-left-10">重置</Button>
         <div class="edittable-con-1">
@@ -187,6 +193,7 @@
                 query: {
                     computer_room: '',
                     connection_name: '',
+                    isQuery: 0,
                     valve: false
                 }
             }
@@ -252,7 +259,7 @@
                     })
             },
             getPageInfo(vl = 1) {
-                axios.get(`${this.$config.url}/management_db/fetch/?page=${vl}&permissions_type=base&con=${JSON.stringify(this.query)}`)
+                axios.get(`${this.$config.url}/management_db/fetch/?page=${vl}&con=${JSON.stringify(this.query)}`)
                     .then(res => {
                         this.tableData = res.data.data;
                         this.pagenumber = parseInt(res.data.page);

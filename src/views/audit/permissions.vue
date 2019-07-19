@@ -21,43 +21,63 @@
       <Form :label-width="120" label-position="right">
         <template>
           <FormItem label="DDL及索引权限:">
-            <p v-if="perList.ddl === '0'">否</p>
-            <p v-else>是</p>
+            <RadioGroup v-model="perList.ddl">
+              <Radio label="1">是</Radio>
+              <Radio label="0">否</Radio>
+            </RadioGroup>
           </FormItem>
           <template v-if="perList.ddl !== '0'">
             <FormItem label="连接名:">
-              <Tag color="blue" v-for="i in perList.ddl_source" :key="i">{{i}}</Tag>
+              <CheckboxGroup v-model="perList.ddl_source">
+                <Checkbox v-for="i in connectionList" :label="i.Source" :key="i.Source">
+                  <Tag color="purple" :key="i.Source"> {{i.Source}}</Tag>
+                </Checkbox>
+              </CheckboxGroup>
             </FormItem>
           </template>
           <hr style="height:1px;border:none;border-top:1px dashed #dddee1;"/>
           <br>
           <FormItem label="DML权限:">
-            <p v-if="perList.dml === '0'">否</p>
-            <p v-else>是</p>
+            <RadioGroup v-model="perList.dml">
+              <Radio label="1">是</Radio>
+              <Radio label="0">否</Radio>
+            </RadioGroup>
           </FormItem>
           <template v-if="perList.dml === '1'">
             <FormItem label="连接名:">
-              <Tag color="blue" v-for="i in perList.dml_source" :key="i">{{i}}</Tag>
+              <CheckboxGroup v-model="perList.dml_source">
+                <Checkbox v-for="i in connectionList" :label="i.Source" :key="i.Source">
+                  <Tag color="geekblue" :key="i.Source"> {{i.Source}}</Tag>
+                </Checkbox>
+              </CheckboxGroup>
             </FormItem>
           </template>
           <hr style="height:1px;border:none;border-top:1px dashed #dddee1;"/>
           <br>
-          <FormItem label="上级审核人范围:">
-            <Tag color="blue" v-for="i in perList.auditor" :key="i">{{i}}</Tag>
-          </FormItem>
-          <hr style="height:1px;border:none;border-top:1px dashed #dddee1;"/>
-          <br>
           <FormItem label="数据查询权限:">
-            <p v-if="perList.query === '0'">否</p>
-            <p v-else>是</p>
+            <RadioGroup v-model="perList.query">
+              <Radio label="1">是</Radio>
+              <Radio label="0">否</Radio>
+            </RadioGroup>
           </FormItem>
           <template v-if="perList.query === '1'">
             <FormItem label="连接名:">
-              <Tag color="blue" v-for="i in perList.query_source" :key="i">{{i}}</Tag>
+              <CheckboxGroup v-model="perList.query_source">
+                <Checkbox v-for="i in query_list" :label="i.Source" :key="i.Source">
+                  <Tag color="geekblue" :key="i.Source"> {{i.Source}}</Tag>
+                </Checkbox>
+              </CheckboxGroup>
             </FormItem>
           </template>
           <hr style="height:1px;border:none;border-top:1px dashed #dddee1;"/>
         </template>
+        <FormItem label="上级审核人范围:">
+          <CheckboxGroup v-model="perList.auditor">
+            <Checkbox v-for="i in auditor" :label="i.Username" :key="i.Username">
+              <Tag color="geekblue" :key="i.Username"> {{i.Username}}</Tag>
+            </Checkbox>
+          </CheckboxGroup>
+        </FormItem>
         <hr style="height:1px;border:none;border-top:1px dashed #dddee1;"/>
         <br>
         <FormItem label="用户管理权限:">
@@ -168,6 +188,9 @@
                 editInfodModal: false,
                 perList: {
                 },
+                connectionList: [],
+                query_list: [],
+                auditor: [],
                 orderStatus: {
                     s: '',
                     work_id: ''
@@ -185,6 +208,14 @@
                         this.$config.err_notice(this, error)
                     })
             },
+            init() {
+                axios.put(`${this.$config.url}/dash/userinfo`)
+                    .then(res => {
+                        this.connectionList = res.data.source;
+                        this.query_list = res.data.query;
+                        this.auditor = res.data.au;
+                    })
+            },
             modalinfo(vl) {
                 this.editInfodModal = true;
                 this.perList = vl.Permissions;
@@ -195,6 +226,7 @@
                 axios.put(`${this.$config.url}/rules/allow`,
                     {
                         'WorkId': this.orderStatus.work_id,
+                        'Permission': this.perList
                     })
                     .then(res => {
                         this.$config.notice(res.data);
@@ -221,7 +253,8 @@
             }
         },
         mounted() {
-            this.permisson_list()
+            this.permisson_list();
+            this.init()
         }
     }
 </script>
