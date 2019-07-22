@@ -212,7 +212,8 @@ export const appRouter = [{
     title: '管理',
     access: 0,
     component: Index,
-    children: [{
+    children: [
+        {
         path: 'management-user',
         name: 'management-user',
         title: '用户',
@@ -247,10 +248,19 @@ export const appRouter = [{
         component: resolve => {
           require(['./views/management/setting.vue'], resolve)
         }
+      },
+      {
+        path: 'roles',
+        name: 'roles',
+        title: '审核规则',
+        icon: 'md-aperture',
+        component: resolve => {
+          require(['./views/management/roles.vue'], resolve)
+        }
       }
     ]
   }
-]
+];
 
 export const MainRoute = [
   loginRouter,

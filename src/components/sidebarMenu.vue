@@ -40,7 +40,6 @@
   </div>
 </template>
 <script>
-    //
     import util from '../libs/util'
     import axios from 'axios'
 
@@ -66,7 +65,8 @@
                     'query-audit': '1',
                     'setting': '0',
                     'authGroup': '0',
-                    "perOrder": '0'
+                    "perOrder": '0',
+                    'roles': '0'
                 }
             }
         },
@@ -97,10 +97,11 @@
                     this.filtermenulist.dml = c.dml;
                     this.filtermenulist['management-user'] = c.user;
                     this.filtermenulist['management-database'] = c.base;
-                    this.filtermenulist['query'] = c.query;
+                    this.filtermenulist.query = c.query;
                     this.filtermenulist.setting = s.setting;
                     this.filtermenulist.authGroup = s.group;
-                    this.filtermenulist.perOrder = s.perOrder
+                    this.filtermenulist.perOrder = s.perOrder;
+                    this.filtermenulist.roles = s.roles
                 })
         }
     }

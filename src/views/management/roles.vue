@@ -1,0 +1,248 @@
+<template>
+  <div>
+    <Row>
+      <Col span="24">
+        <Card>
+          <p slot="title">
+            <Icon type="md-bulb"/>
+            审核规则
+          </p>
+          <div>
+            <Row>
+              <Col span="12">
+                <Card>
+                  <p slot="title">
+                    <Icon type="md-flower"/>
+                    DDL审核规则
+                  </p>
+                  <div>
+                    <Row>
+                      <Col span="8">
+                        <Form :label-width="150">
+                          <FormItem label="检查表注释">
+                            <i-switch size="large" v-model="juno.DDLCheckTableComment">
+                              <span slot="open">开</span>
+                              <span slot="close">关</span>
+                            </i-switch>
+                          </FormItem>
+                          <FormItem label="检查列注释">
+                            <i-switch size="large" v-model="juno.DDlCheckColumnComment">
+                              <span slot="open">开</span>
+                              <span slot="close">关</span>
+                            </i-switch>
+                          </FormItem>
+                          <FormItem label="检查ddl语句有null值">
+                            <i-switch size="large" v-model="juno.DDLCheckColumnNullable">
+                              <span slot="open">开</span>
+                              <span slot="close">关</span>
+                            </i-switch>
+                          </FormItem>
+                          <FormItem label="检查列默认值">
+                            <i-switch size="large" v-model="juno.DDLCheckColumnDefault">
+                              <span slot="open">开</span>
+                              <span slot="close">关</span>
+                            </i-switch>
+                          </FormItem>
+                          <FormItem label="检查时间字段默认值">
+                            <i-switch size="large" v-model="juno.DDLTimeFieldDefault">
+                              <span slot="open">开</span>
+                              <span slot="close">关</span>
+                            </i-switch>
+                          </FormItem>
+                          <FormItem label="是否允许跨库表迁移">
+                            <i-switch size="large" v-model="juno.DDLEnableAcrossDBRename">
+                              <span slot="open">开</span>
+                              <span slot="close">关</span>
+                            </i-switch>
+                          </FormItem>
+                          <FormItem label="强制自增列初始值为1">
+                            <i-switch size="large" v-model="juno.DDLEnableAutoincrementInit">
+                              <span slot="open">开</span>
+                              <span slot="close">关</span>
+                            </i-switch>
+                          </FormItem>
+                          <FormItem label="允许设置排列顺序">
+                            <i-switch size="large" v-model="juno.EnableSetCollation">
+                              <span slot="open">开</span>
+                              <span slot="close">关</span>
+                            </i-switch>
+                          </FormItem>
+                          <FormItem label="允许设置字符集">
+                            <i-switch size="large" v-model="juno.EnableSetCharset">
+                              <span slot="open">开</span>
+                              <span slot="close">关</span>
+                            </i-switch>
+                          </FormItem>
+                          <FormItem label="允许一个工单内有多条DDL语句">
+                            <i-switch size="large" v-model="juno.DDLMultiToSubmit">
+                              <span slot="open">开</span>
+                              <span slot="close">关</span>
+                            </i-switch>
+                          </FormItem>
+                        </Form>
+                      </Col>
+                      <Col span="8">
+                        <Form :label-width="150">
+                          <FormItem label="检查关键词">
+                            <i-switch size="large" v-model="juno.CheckIdentifier">
+                              <span slot="open">开</span>
+                              <span slot="close">关</span>
+                            </i-switch>
+                          </FormItem>
+                          <FormItem label="检查自增列设置无符号标志unsigned">
+                            <i-switch size="large" v-model="juno.DDLEnableAutoincrementUnsigned">
+                              <span slot="open">开</span>
+                              <span slot="close">关</span>
+                            </i-switch>
+                          </FormItem>
+                          <FormItem label="允许删除表">
+                            <i-switch size="large" v-model="juno.DDLEnableDropTable">
+                              <span slot="open">开</span>
+                              <span slot="close">关</span>
+                            </i-switch>
+                          </FormItem>
+                          <FormItem label="允许删除库">
+                            <i-switch size="large" v-model="juno.DDLEnableDropDatabase">
+                              <span slot="open">开</span>
+                              <span slot="close">关</span>
+                            </i-switch>
+                          </FormItem>
+                          <FormItem label="允许索引名为空">
+                            <i-switch size="large" v-model="juno.DDLEnableNullIndexName">
+                              <span slot="open">开</span>
+                              <span slot="close">关</span>
+                            </i-switch>
+                          </FormItem>
+                          <FormItem label="开启索引名称规范">
+                            <i-switch size="large" v-model="juno.DDLIndexNameSpec">
+                              <span slot="open">开</span>
+                              <span slot="close">关</span>
+                            </i-switch>
+                          </FormItem>
+                        </Form>
+                      </Col>
+                      <Col span="8">
+                        <Form :label-width="150">
+                          <FormItem label="单个索引指定字段上限">
+                            <InputNumber :min="0" v-model="juno.DDLMaxKeyParts"></InputNumber>
+                          </FormItem>
+                          <FormItem label="单表索引数上限">
+                            <InputNumber :min="0" v-model="juno.DDLMaxKey"></InputNumber>
+                          </FormItem>
+                          <FormItem label="char字段最大长度">
+                            <InputNumber :min="0" v-model="juno.DDLMaxCharLength"></InputNumber>
+                          </FormItem>
+                          <FormItem label="表名最大长度">
+                            <InputNumber :min="0" v-model="juno.MaxTableNameLen"></InputNumber>
+                          </FormItem>
+                          <FormItem label="最大影响行数">
+                            <InputNumber :min="0" v-model="juno.MaxAffectRows"></InputNumber>
+                          </FormItem>
+                          <FormItem label="允许的排列顺序范围">
+                            <Input v-model="juno.SupportCollation"></Input>
+                          </FormItem>
+                          <FormItem label="允许的字符集范围">
+                            <Input v-model="juno.SupportCharset"></Input>
+                          </FormItem>
+                          <FormItem label="建表时必须拥有哪些字段">
+                            <Input v-model="juno.MustHaveColumns"></Input>
+                          </FormItem>
+                        </Form>
+                      </Col>
+                    </Row>
+                  </div>
+                </Card>
+              </Col>
+              <Col span="12">
+                <Card class="margin-left-10">
+                  <p slot="title">
+                    <Icon type="md-flower"/>
+                    DML审核规则
+                  </p>
+                  <div>
+                    <Row>
+                      <Col span="8">
+                        <Form :label-width="150">
+                          <FormItem label="检查插入语句存在列名">
+                            <i-switch size="large" v-model="juno.DMLInsertColumns">
+                              <span slot="open">开</span>
+                              <span slot="close">关</span>
+                            </i-switch>
+                          </FormItem>
+                          <FormItem label="检查dml语句where条件">
+                            <i-switch size="large" v-model="juno.DMLWhere">
+                              <span slot="open">开</span>
+                              <span slot="close">关</span>
+                            </i-switch>
+                          </FormItem>
+                          <FormItem label="检查dml语句order条件">
+                            <i-switch size="large" v-model="juno.DMLOrder">
+                              <span slot="open">开</span>
+                              <span slot="close">关</span>
+                            </i-switch>
+                          </FormItem>
+                          <FormItem label="检查dml语句有select语句">
+                            <i-switch size="large" v-model="juno.DMLSelect">
+                              <span slot="open">开</span>
+                              <span slot="close">关</span>
+                            </i-switch>
+                          </FormItem>
+                          <FormItem label="Insert语句字段上限">
+                            <InputNumber :min="0" v-model="juno.DMLMaxInsertRows"></InputNumber>
+                          </FormItem>
+                        </Form>
+                      </Col>
+                    </Row>
+                  </div>
+                </Card>
+                <br>
+                <Button type="primary" @click="referRoles" long class="margin-left-10">保存</Button>
+              </Col>
+            </Row>
+          </div>
+        </Card>
+      </Col>
+    </Row>
+  </div>
+</template>
+
+<script>
+    import axios from 'axios'
+
+    export default {
+        name: "roles",
+        data() {
+            return {
+                juno: {
+                    DMLMaxInsertRows: 2
+                }
+            }
+        },
+        methods: {
+            referRoles() {
+                axios.post(`${this.$config.url}/group/setting/roles`, {
+                    'juno': this.juno
+                })
+                    .then(res => {
+                        this.$config.notice(res.data)
+                    })
+                    .catch(error => {
+                        this.$config.err_notice(this, error)
+                    })
+            }
+        },
+        mounted() {
+            axios.get(`${this.$config.url}/group/setting`)
+                .then(res => {
+                    this.juno = res.data.AuditRole
+                })
+                .catch(error => {
+                    this.$config.err_notice(this, error)
+                })
+        }
+    }
+</script>
+
+<style lang="less" scoped>
+  @import "../../styles/common.less";
+</style>

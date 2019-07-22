@@ -49,22 +49,23 @@
           系统用户表
         </p>
         <Input v-model="query.user" placeholder="请填写用户名" style="width: 20%" clearable></Input>
-        <Input v-model="query.department" placeholder="请填写部门" style="width: 20%" clearable></Input>
+        <Input v-model="query.department" placeholder="请填写部门" style="width: 20%" clearable
+               class="margin-left-10"></Input>
         <Button @click="queryData" type="primary" class="margin-left-10">查询</Button>
         <Button @click="queryCancel" type="warning" class="margin-left-10">重置</Button>
         <div class="edittable-con-1">
           <Table border :columns="columns" :data="tableData" stripe height="520">
             <template slot-scope="{ row }" slot="action">
-              <Button type="primary" size="small" style="margin-right: 5px" @click="editPassModal(row)"
+              <Button type="primary" size="small" @click="editPassModal(row)"
                       v-if="row.id !== 1">更改密码
               </Button>
-              <Button type="info" size="small" @click="editAuthModal(row)" style="margin-right: 5px">详细信息</Button>
+              <Button type="info" size="small" @click="editAuthModal(row)" class="margin-left-10">详细信息</Button>
               <Poptip
-                confirm
-                title="确定删除改用户吗？"
-                transfer
-                @on-ok="delUser(row)">
-                <Button type="warning" size="small" v-if="row.id !== 1">删除</Button>
+                      confirm
+                      title="确定删除改用户吗？"
+                      transfer
+                      @on-ok="delUser(row)">
+                <Button type="warning" size="small" v-if="row.id !== 1" class="margin-left-10">删除</Button>
               </Poptip>
             </template>
           </Table>
@@ -121,333 +122,333 @@
   </div>
 </template>
 <script>
-  import axios from 'axios'
-  import '../../styles/tablesmargintop.css'
+    import axios from 'axios'
+    import '../../styles/tablesmargintop.css'
 
-  export default {
-    data () {
-      const valideRePassword = (rule, value, callback) => { // eslint-disable-line no-unused-vars
-        if (value !== this.editPasswordForm.newPass) {
-          callback(new Error('两次输入密码不一致'))
-        } else {
-          callback()
+    export default {
+        data() {
+            const valideRePassword = (rule, value, callback) => { // eslint-disable-line no-unused-vars
+                if (value !== this.editPasswordForm.newPass) {
+                    callback(new Error('两次输入密码不一致'))
+                } else {
+                    callback()
+                }
+            }
+            const valideuserinfoPassword = (rule, value, callback) => {
+                if (value !== this.userinfo.password) {
+                    callback(new Error('两次输入密码不一致'))
+                } else {
+                    callback()
+                }
+            }
+            return {
+                query: {
+                    user: '',
+                    department: '',
+                    valve: false
+                },
+                loading: false,
+                columns: [
+                    {
+                        title: '用户名',
+                        key: 'Username',
+                        sortable: true
+                    },
+                    {
+                        title: '角色',
+                        key: 'Rule',
+                        sortable: true
+                    },
+                    {
+                        title: '姓名',
+                        key: 'RealName',
+                        sortable: true
+                    },
+                    {
+                        title: '部门',
+                        key: 'Department',
+                        sortable: true
+                    },
+                    {
+                        title: 'email',
+                        key: 'Email',
+                        sortable: true
+                    },
+                    {
+                        title: '操作',
+                        key: 'action',
+                        width: 250,
+                        align: 'center',
+                        slot: 'action'
+                    }
+                ],
+                tableData: [],
+                pagenumber: 1,
+                // 新建用户
+                userinfo: {
+                    username: '',
+                    password: '',
+                    confirmpassword: '',
+                    group: '',
+                    checkbox: '',
+                    department: '',
+                    email: '',
+                    realname: ''
+                },
+                userinfoValidate: {
+                    username: [{
+                        required: true,
+                        message: '请输入用户名',
+                        trigger: 'blur'
+                    }],
+                    password: [
+                        {
+                            required: true,
+                            message: '请输入密码',
+                            trigger: 'blur'
+                        },
+                        {
+                            min: 6,
+                            message: '请至少输入6个字符',
+                            trigger: 'blur'
+                        },
+                        {
+                            max: 32,
+                            message: '最多输入32个字符',
+                            trigger: 'blur'
+                        }
+                    ],
+                    confirmpassword: [
+                        {
+                            required: true,
+                            message: '请再次输入新密码',
+                            trigger: 'blur'
+                        },
+                        {
+                            validator: valideuserinfoPassword,
+                            trigger: 'blur'
+                        }
+                    ],
+                    group: [
+                        {
+                            required: true,
+                            message: '请输入权限',
+                            trigger: 'blur'
+                        }
+                    ],
+                    department: [
+                        {
+                            required: true,
+                            message: '请输入部门名称',
+                            trigger: 'blur'
+                        },
+                        {
+                            min: 2,
+                            message: '请至少输入6个字符',
+                            trigger: 'blur'
+                        },
+                        {
+                            max: 32,
+                            message: '最多输入32个字符',
+                            trigger: 'blur'
+                        }
+                    ],
+                    realname: [
+                        {
+                            required: true,
+                            message: '请输入姓名',
+                            trigger: 'blur'
+                        },
+                        {
+                            min: 2,
+                            message: '请至少输入2个字符',
+                            trigger: 'blur'
+                        },
+                        {
+                            max: 32,
+                            message: '最多输入32个字符',
+                            trigger: 'blur'
+                        }],
+                    email: [
+                        {
+                            required: true,
+                            message: '请输入工作邮箱',
+                            trigger: 'blur'
+                        },
+                        {
+                            min: 2,
+                            message: '请至少输入2个字符',
+                            trigger: 'blur'
+                        },
+                        {
+                            max: 32,
+                            message: '最多输入32个字符',
+                            trigger: 'blur'
+                        }]
+                },
+                // 更改密码遮罩层状态
+                editPasswordModal: false,
+                // 更改密码
+                editPasswordForm: {
+                    newPass: '',
+                    rePass: '',
+                    modal: false
+                },
+                // 保存更改密码loding按钮状态
+                savePassLoading: false,
+                // 更改密码表单验证规则
+                passwordValidate: {
+                    newPass: [{
+                        required: true,
+                        message: '请输入新密码',
+                        trigger: 'blur'
+                    },
+                        {
+                            min: 6,
+                            message: '请至少输入6个字符',
+                            trigger: 'blur'
+                        },
+                        {
+                            max: 32,
+                            message: '最多输入32个字符',
+                            trigger: 'blur'
+                        }
+                    ],
+                    rePass: [{
+                        required: true,
+                        message: '请再次输入新密码',
+                        trigger: 'blur'
+                    },
+                        {
+                            validator: valideRePassword,
+                            trigger: 'blur'
+                        }
+                    ]
+                },
+                // 更改部门及权限
+                GroupModal: false,
+                editAuthForm: {
+                    Username: '',
+                    Department: '',
+                    RealName: '',
+                    Rule: '',
+                    Email: '',
+                    modal: false
+                },
+                // 更改部门及权限遮罩层状态
+                // 用户名
+                username: '',
+                connectionList: {
+                    multi: Boolean
+                }
+            }
+        },
+        methods: {
+            editPassModal(row) {
+                this.username = row.Username;
+                this.editPasswordForm.modal = true;
+            },
+            editAuthModal(row) {
+                this.editAuthForm = this.$config.sameMerge(this.editAuthForm, row, this.editAuthForm);
+                this.editAuthForm.modal = true;
+            },
+            cancelModal(vl) {
+                this.$config.clearObj(vl)
+            },
+            saveEditPass() {
+                this.$refs['editPasswordForm'].validate((valid) => {
+                    if (valid) {
+                        this.savePassLoading = true;
+                        axios.post(`${this.$config.url}/management_user/password_reset`, {
+                            'username': this.username,
+                            'new': this.editPasswordForm.newPass
+                        })
+                            .then(res => {
+                                this.$config.notice(res.data)
+                                this.editPasswordForm.modal = false
+                            })
+                            .catch(error => {
+                                this.$config.err_notice(this, error)
+                            })
+                        this.savePassLoading = false
+                    }
+                })
+            },
+            saveAuthInfo() {
+                this.savePassLoading = true;
+                axios.post(`${this.$config.url}/management_user/modify`, {
+                    'Username': this.editAuthForm.Username,
+                    'Rule': this.editAuthForm.Rule,
+                    'Department': this.editAuthForm.Department,
+                    'RealName': this.editAuthForm.RealName,
+                    'Email': this.editAuthForm.Email
+                })
+                    .then(res => {
+                        this.$config.notice(res.data);
+                        this.$config.clearObj(this.editAuthForm);
+                        this.refreshUser(this.$refs.page.currentPage)
+                    })
+                    .catch(error => {
+                        this.$config.err_notice(this, error)
+                    })
+                this.savePassLoading = false
+            },
+            registered() {
+                this.$refs['userinfova'].validate((valid) => {
+                    if (valid) {
+                        this.loading = true;
+                        axios.post(`${this.$config.url}/management_user/register`, {
+                            'userinfo': this.userinfo
+                        })
+                            .then(res => {
+                                this.loading = false
+                                this.$config.notice(res.data)
+                                this.refreshUser(this.$refs.page.currentPage)
+                                this.userinfo = this.$config.clearObj(this.userinfo)
+                            })
+                            .catch(error => {
+                                this.loading = false
+                                this.$config.err_notice(this, error)
+                            })
+                    }
+                })
+            },
+            refreshUser(vl = 1) {
+                axios.get(`${this.$config.url}/management_user/fetch?page=${vl}&con=${JSON.stringify(this.query)}`)
+                    .then(res => {
+                        this.connectionList.multi = res.data.multi;
+                        this.tableData = res.data.data;
+                        this.pagenumber = parseInt(res.data.page)
+                    })
+                    .catch(error => {
+                        this.$config.err_notice(this, error)
+                    })
+            },
+            delUser(row) {
+                let step = this.$refs.page.currentPage
+                if (this.tableData.length === 1) {
+                    step = step - 1
+                }
+                axios.delete(`${this.$config.url}/management_user/del/${row.Username}`)
+                    .then(res => {
+                        this.$config.notice(res.data)
+                        this.refreshUser(step)
+                    })
+                    .catch(error => {
+                        this.$config.err_notice(this, error)
+                    })
+            },
+            queryData() {
+                this.query.valve = true;
+                this.refreshUser()
+            },
+            queryCancel() {
+                this.$config.clearObj(this.query)
+                this.refreshUser()
+            }
+        },
+        mounted() {
+            this.refreshUser();
         }
-      }
-      const valideuserinfoPassword = (rule, value, callback) => {
-        if (value !== this.userinfo.password) {
-          callback(new Error('两次输入密码不一致'))
-        } else {
-          callback()
-        }
-      }
-      return {
-        query: {
-          user: '',
-          department: '',
-          valve: false
-        },
-        loading: false,
-        columns: [
-          {
-            title: '用户名',
-            key: 'Username',
-            sortable: true
-          },
-          {
-            title: '角色',
-            key: 'Rule',
-            sortable: true
-          },
-          {
-            title: '姓名',
-            key: 'RealName',
-            sortable: true
-          },
-          {
-            title: '部门',
-            key: 'Department',
-            sortable: true
-          },
-          {
-            title: 'email',
-            key: 'Email',
-            sortable: true
-          },
-          {
-            title: '操作',
-            key: 'action',
-            width: 250,
-            align: 'center',
-            slot: 'action'
-          }
-        ],
-        tableData: [],
-        pagenumber: 1,
-        // 新建用户
-        userinfo: {
-          username: '',
-          password: '',
-          confirmpassword: '',
-          group: '',
-          checkbox: '',
-          department: '',
-          email: '',
-          realname: ''
-        },
-        userinfoValidate: {
-          username: [{
-            required: true,
-            message: '请输入用户名',
-            trigger: 'blur'
-          }],
-          password: [
-            {
-              required: true,
-              message: '请输入密码',
-              trigger: 'blur'
-            },
-            {
-              min: 6,
-              message: '请至少输入6个字符',
-              trigger: 'blur'
-            },
-            {
-              max: 32,
-              message: '最多输入32个字符',
-              trigger: 'blur'
-            }
-          ],
-          confirmpassword: [
-            {
-              required: true,
-              message: '请再次输入新密码',
-              trigger: 'blur'
-            },
-            {
-              validator: valideuserinfoPassword,
-              trigger: 'blur'
-            }
-          ],
-          group: [
-            {
-              required: true,
-              message: '请输入权限',
-              trigger: 'blur'
-            }
-          ],
-          department: [
-            {
-              required: true,
-              message: '请输入部门名称',
-              trigger: 'blur'
-            },
-            {
-              min: 2,
-              message: '请至少输入6个字符',
-              trigger: 'blur'
-            },
-            {
-              max: 32,
-              message: '最多输入32个字符',
-              trigger: 'blur'
-            }
-          ],
-          realname: [
-            {
-              required: true,
-              message: '请输入姓名',
-              trigger: 'blur'
-            },
-            {
-              min: 2,
-              message: '请至少输入2个字符',
-              trigger: 'blur'
-            },
-            {
-              max: 32,
-              message: '最多输入32个字符',
-              trigger: 'blur'
-            }],
-          email: [
-            {
-              required: true,
-              message: '请输入工作邮箱',
-              trigger: 'blur'
-            },
-            {
-              min: 2,
-              message: '请至少输入2个字符',
-              trigger: 'blur'
-            },
-            {
-              max: 32,
-              message: '最多输入32个字符',
-              trigger: 'blur'
-            }]
-        },
-        // 更改密码遮罩层状态
-        editPasswordModal: false,
-        // 更改密码
-        editPasswordForm: {
-          newPass: '',
-          rePass: '',
-          modal: false
-        },
-        // 保存更改密码loding按钮状态
-        savePassLoading: false,
-        // 更改密码表单验证规则
-        passwordValidate: {
-          newPass: [{
-            required: true,
-            message: '请输入新密码',
-            trigger: 'blur'
-          },
-            {
-              min: 6,
-              message: '请至少输入6个字符',
-              trigger: 'blur'
-            },
-            {
-              max: 32,
-              message: '最多输入32个字符',
-              trigger: 'blur'
-            }
-          ],
-          rePass: [{
-            required: true,
-            message: '请再次输入新密码',
-            trigger: 'blur'
-          },
-            {
-              validator: valideRePassword,
-              trigger: 'blur'
-            }
-          ]
-        },
-        // 更改部门及权限
-        GroupModal: false,
-        editAuthForm: {
-          Username: '',
-          Department: '',
-          RealName: '',
-          Rule: '',
-          Email: '',
-          modal: false
-        },
-        // 更改部门及权限遮罩层状态
-        // 用户名
-        username: '',
-        connectionList: {
-          multi: Boolean
-        }
-      }
-    },
-    methods: {
-      editPassModal (row) {
-        this.username = row.Username;
-        this.editPasswordForm.modal = true;
-      },
-      editAuthModal (row) {
-        this.editAuthForm = this.$config.sameMerge(this.editAuthForm, row, this.editAuthForm);
-        this.editAuthForm.modal = true;
-      },
-      cancelModal (vl) {
-        this.$config.clearObj(vl)
-      },
-      saveEditPass () {
-        this.$refs['editPasswordForm'].validate((valid) => {
-          if (valid) {
-            this.savePassLoading = true;
-            axios.post(`${this.$config.url}/management_user/password_reset`, {
-              'username': this.username,
-              'new': this.editPasswordForm.newPass
-            })
-              .then(res => {
-                this.$config.notice(res.data)
-                this.editPasswordForm.modal = false
-              })
-              .catch(error => {
-                this.$config.err_notice(this, error)
-              })
-            this.savePassLoading = false
-          }
-        })
-      },
-      saveAuthInfo () {
-        this.savePassLoading = true;
-        axios.post(`${this.$config.url}/management_user/modify`, {
-          'Username': this.editAuthForm.Username,
-          'Rule': this.editAuthForm.Rule,
-          'Department': this.editAuthForm.Department,
-          'RealName': this.editAuthForm.RealName,
-          'Email': this.editAuthForm.Email
-        })
-          .then(res => {
-            this.$config.notice(res.data);
-            this.$config.clearObj(this.editAuthForm);
-            this.refreshUser(this.$refs.page.currentPage)
-          })
-          .catch(error => {
-            this.$config.err_notice(this, error)
-          })
-        this.savePassLoading = false
-      },
-      registered () {
-        this.$refs['userinfova'].validate((valid) => {
-          if (valid) {
-            this.loading = true;
-            axios.post(`${this.$config.url}/management_user/register`, {
-              'userinfo': this.userinfo
-            })
-              .then(res => {
-                this.loading = false
-                this.$config.notice(res.data)
-                this.refreshUser(this.$refs.page.currentPage)
-                this.userinfo = this.$config.clearObj(this.userinfo)
-              })
-              .catch(error => {
-                this.loading = false
-                this.$config.err_notice(this, error)
-              })
-          }
-        })
-      },
-      refreshUser (vl = 1) {
-        axios.get(`${this.$config.url}/management_user/fetch?page=${vl}&con=${JSON.stringify(this.query)}`)
-          .then(res => {
-            this.connectionList.multi = res.data.multi;
-            this.tableData = res.data.data;
-            this.pagenumber = parseInt(res.data.page)
-          })
-          .catch(error => {
-            this.$config.err_notice(this, error)
-          })
-      },
-      delUser (row) {
-        let step = this.$refs.page.currentPage
-        if (this.tableData.length === 1) {
-          step = step - 1
-        }
-        axios.delete(`${this.$config.url}/management_user/del/${row.Username}`)
-          .then(res => {
-            this.$config.notice(res.data)
-            this.refreshUser(step)
-          })
-          .catch(error => {
-            this.$config.err_notice(this, error)
-          })
-      },
-      queryData () {
-        this.query.valve = true;
-        this.refreshUser()
-      },
-      queryCancel () {
-        this.$config.clearObj(this.query)
-        this.refreshUser()
-      }
-    },
-    mounted () {
-      this.refreshUser();
     }
-  }
 </script>

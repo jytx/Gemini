@@ -193,7 +193,7 @@
                 query: {
                     computer_room: '',
                     connection_name: '',
-                    isQuery: 0,
+                    isQuery: 2,
                     valve: false
                 }
             }
@@ -273,9 +273,11 @@
                     })
             },
             modifyBase() {
-                this.editbaseinfo.Port = parseInt(this.editbaseinfo.Port)
+                let x = JSON.parse(JSON.stringify(this.editbaseinfo))
+                x.Port = parseInt(x.Port);
+                x.IsQuery = 0;
                 axios.put(`${this.$config.url}/management_db/edit`, {
-                    'data': this.editbaseinfo
+                    'data': x
                 })
                     .then(res => this.$config.notice(res.data))
                     .catch(err => this.$config.err_notice(this, err))
@@ -285,7 +287,8 @@
                 this.getPageInfo()
             },
             queryCancel() {
-                this.$config.clearObj(this.query)
+                this.$config.clearObj(this.query);
+                this.query.isQuery = 2;
                 this.getPageInfo()
             }
         },
