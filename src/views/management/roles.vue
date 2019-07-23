@@ -119,6 +119,12 @@
                               <span slot="close">关</span>
                             </i-switch>
                           </FormItem>
+                          <FormItem label="打开OSC">
+                            <i-switch size="large" v-model="juno.IsOSC">
+                              <span slot="open">开</span>
+                              <span slot="close">关</span>
+                            </i-switch>
+                          </FormItem>
                         </Form>
                       </Col>
                       <Col span="8">
@@ -197,6 +203,89 @@
                 </Card>
                 <br>
                 <Button type="primary" @click="referRoles" long class="margin-left-10">保存</Button>
+              </Col>
+            </Row>
+            <br>
+            <Row>
+              <Col span="12">
+                <Card>
+                  <p slot="title">
+                    <Icon type="md-flower"/>
+                    Pt-OSC设置
+                  </p>
+                  <div>
+                    <Row>
+                      <Col span="12">
+                        <Form :label-width="180">
+                          <FormItem label="OscDropNewTable">
+                            <i-switch size="large" v-model="juno.OscDropNewTable">
+                              <span slot="open">开</span>
+                              <span slot="close">关</span>
+                            </i-switch>
+                          </FormItem>
+                          <FormItem label="OscDropOldTable">
+                            <i-switch size="large" v-model="juno.OscDropOldTable">
+                              <span slot="open">开</span>
+                              <span slot="close">关</span>
+                            </i-switch>
+                          </FormItem>
+                          <FormItem label="OscCheckReplicationFilters">
+                            <i-switch size="large" v-model="juno.OscCheckReplicationFilters">
+                              <span slot="open">开</span>
+                              <span slot="close">关</span>
+                            </i-switch>
+                          </FormItem>
+                          <FormItem label="OscCheckAlter">
+                            <i-switch size="large" v-model="juno.OscCheckAlter">
+                              <span slot="open">开</span>
+                              <span slot="close">关</span>
+                            </i-switch>
+                          </FormItem>
+                          <FormItem label="OscPrintSql">
+                            <i-switch size="large" v-model="juno.OscPrintSql">
+                              <span slot="open">开</span>
+                              <span slot="close">关</span>
+                            </i-switch>
+                          </FormItem>
+                          <FormItem label="OscAlterForeignKeysMethod">
+                            <Input v-model="juno.OscAlterForeignKeysMethod"></Input>
+                          </FormItem>
+                          <FormItem label="OscChunkTime">
+                            <InputNumber :min="0" v-model="juno.OscChunkTime"></InputNumber>
+                          </FormItem>
+                        </Form>
+                      </Col>
+                      <Col span="12">
+                        <Form :label-width="200">
+                          <FormItem label="OscBinDir">
+                            <Input v-model="juno.OscBinDir"></Input>
+                          </FormItem>
+                          <FormItem label="OscMaxLag">
+                            <InputNumber :min="0" v-model="juno.OscMaxLag"></InputNumber>
+                          </FormItem>
+                          <FormItem label="OscCheckInterval">
+                            <InputNumber :min="0" v-model="juno.OscCheckInterval"></InputNumber>
+                          </FormItem>
+                          <FormItem label="OscMaxThreadConnected">
+                            <InputNumber :min="0" v-model="juno.OscMaxThreadConnected"></InputNumber>
+                          </FormItem>
+                          <FormItem label="OscMaxThreadRunning">
+                            <InputNumber :min="0" v-model="juno.OscMaxThreadRunning"></InputNumber>
+                          </FormItem>
+                          <FormItem label="OscCriticalThreadConnected">
+                            <InputNumber :min="0" v-model="juno.OscCriticalThreadConnected"></InputNumber>
+                          </FormItem>
+                          <FormItem label="OscCriticalThreadRunning">
+                            <InputNumber :min="0" v-model="juno.OscCriticalThreadRunning"></InputNumber>
+                          </FormItem>
+                          <FormItem label="OscRecursionMethod">
+                            <Input v-model="juno.OscRecursionMethod"></Input>
+                          </FormItem>
+                        </Form>
+                      </Col>
+                    </Row>
+                  </div>
+                </Card>
               </Col>
             </Row>
           </div>
