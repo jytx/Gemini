@@ -33,7 +33,7 @@
             <div class="container">
                 <div class="navbar-translate">
                     <a class="navbar-brand">
-                        版本号: v2.0.0-beta v0.0.9
+                        版本号: v2.0.0 RC v0.1.0
                     </a>
                     <Button v-if="switchCode" type="default" ghost @click="register= true">创建用户</Button>
                 </div>
@@ -88,7 +88,7 @@
                             <li>
                                 <Tooltip content="yearning.io" placement="top-start">
                                     <a class="nav-link" href="https://yearning.io">
-                                        关于Yearning
+                                        关于Libra
                                     </a>
                                 </Tooltip>
                             </li>
@@ -146,7 +146,7 @@
             </Form>
         </Modal>
 
-        <Modal v-model="sponsorship" title="让Yearning持续提供更好的功能与服务" width="640">
+        <Modal v-model="sponsorship" title="让Libra持续提供更好的功能与服务" width="640">
             <h3> 赞助后你可以得到的</h3>
             联系作者将自己的名字添加到赞助者名单中
 
@@ -154,7 +154,7 @@
             <br>
             <br>
             <h3>定制化需求</h3>
-            企业可根据实际需要向Yearning作者寻求定制功能服务。
+            企业可根据实际需要向Libra作者寻求定制功能服务。
             <br>
             <br>
             <h3>联系方式</h3>

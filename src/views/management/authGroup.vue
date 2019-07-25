@@ -35,7 +35,7 @@
     </Row>
     <Modal v-model="addAuthGroupModal" :width="800">
       <h3 slot="header" style="color:#2D8CF0">用户权限</h3>
-      <Form :model="addAuthGroupForm" :label-width="120" label-position="right">
+      <Form :model="addAuthGroupForm" :label-width="120" label-position="top">
         <FormItem label="用户名">
           <Select v-model="addAuthGroupForm.more_user" v-if="is_more" multiple>
             <Option v-for="i in more_user" :key="i" :value="i"></Option>
@@ -104,7 +104,7 @@
                 <Checkbox
                         :indeterminate="indeterminate.query"
                         :value="checkAll.query"
-                        @click.prevent.native="ddlCheckAll('query_source', 'query', 'connection')">全选
+                        @click.prevent.native="ddlCheckAll('query_source', 'query', 'query')">全选
                 </Checkbox>
               </div>
               <CheckboxGroup v-model="permission.query_source">

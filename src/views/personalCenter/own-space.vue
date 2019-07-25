@@ -65,73 +65,71 @@
       </div>
     </Modal>
 
-    <Modal v-model="editInfoModal">
+    <Modal v-model="editInfoModal" width="700">
       <h3 slot="header" style="color:#2D8CF0">用户权限信息</h3>
-      <Form>
+      <Form  label-position="top">
+        <Divider orientation="left">DDL权限</Divider>
+        <FormItem label="DDL及索引权限:">
+          <RadioGroup v-model="permission.ddl">
+            <Radio label="1">是</Radio>
+            <Radio label="0">否</Radio>
+          </RadioGroup>
+        </FormItem>
+        <FormItem label="可访问的连接名:" v-if="permission.ddl === '1'">
+          <CheckboxGroup v-model="permission.ddl_source">
+            <Checkbox v-for="i in connectionList" :label="i.Source" :key="i.Source">
+              <Tag color="purple" :key="i.Source"> {{i.Source}}</Tag>
+            </Checkbox>
+          </CheckboxGroup>
+        </FormItem>
+        <Divider orientation="left">DML权限</Divider>
+        <FormItem label="DML是否可见:">
+          <RadioGroup v-model="permission.dml">
+            <Radio label="1">是</Radio>
+            <Radio label="0">否</Radio>
+          </RadioGroup>
+        </FormItem>
+        <FormItem label="可访问的连接名:" v-if="permission.dml === '1'">
+          <CheckboxGroup v-model="permission.dml_source">
+            <Checkbox v-for="i in connectionList" :label="i.Source" :key="i.Source">
+              <Tag color="geekblue" :key="i.Source"> {{i.Source}}</Tag>
+            </Checkbox>
+          </CheckboxGroup>
+        </FormItem>
+        <Divider orientation="left">查询权限</Divider>
+        <FormItem label="查询是否可见:">
+          <RadioGroup v-model="permission.query">
+            <Radio label="1">是</Radio>
+            <Radio label="0">否</Radio>
+          </RadioGroup>
+        </FormItem>
+        <FormItem label="可访问的连接名:" v-if="permission.query === '1'">
+          <CheckboxGroup v-model="permission.query_source">
+            <Checkbox v-for="i in query_list" :label="i.Source" :key="i.Source">
+              <Tag color="geekblue" :key="i.Source"> {{i.Source}}</Tag>
+            </Checkbox>
+          </CheckboxGroup>
+        </FormItem>
+        <Divider orientation="left">上级审核人</Divider>
         <FormItem>
-          <Divider orientation="left">DDL权限</Divider>
-          <FormItem label="DDL及索引权限:">
-            <RadioGroup v-model="permission.ddl">
-              <Radio label="1">是</Radio>
-              <Radio label="0">否</Radio>
-            </RadioGroup>
-          </FormItem>
-          <FormItem label="可访问的连接名:" v-if="permission.ddl === '1'">
-            <CheckboxGroup v-model="permission.ddl_source">
-              <Checkbox v-for="i in connectionList" :label="i.Source" :key="i.Source">
-                <Tag color="purple" :key="i.Source"> {{i.Source}}</Tag>
-              </Checkbox>
-            </CheckboxGroup>
-          </FormItem>
-          <Divider orientation="left">DML权限</Divider>
-          <FormItem label="DML是否可见:">
-            <RadioGroup v-model="permission.dml">
-              <Radio label="1">是</Radio>
-              <Radio label="0">否</Radio>
-            </RadioGroup>
-          </FormItem>
-          <FormItem label="可访问的连接名:" v-if="permission.dml === '1'">
-            <CheckboxGroup v-model="permission.dml_source">
-              <Checkbox v-for="i in connectionList" :label="i.Source" :key="i.Source">
-                <Tag color="geekblue" :key="i.Source"> {{i.Source}}</Tag>
-              </Checkbox>
-            </CheckboxGroup>
-          </FormItem>
-          <Divider orientation="left">查询权限</Divider>
-          <FormItem label="查询是否可见:">
-            <RadioGroup v-model="permission.query">
-              <Radio label="1">是</Radio>
-              <Radio label="0">否</Radio>
-            </RadioGroup>
-          </FormItem>
-          <FormItem label="可访问的连接名:" v-if="permission.query === '1'">
-            <CheckboxGroup v-model="permission.query_source">
-              <Checkbox v-for="i in query_list" :label="i.Source" :key="i.Source">
-                <Tag color="geekblue" :key="i.Source"> {{i.Source}}</Tag>
-              </Checkbox>
-            </CheckboxGroup>
-          </FormItem>
-          <Divider orientation="left">上级审核人</Divider>
-          <FormItem>
-            <CheckboxGroup v-model="permission.auditor">
-              <Checkbox v-for="i in auditor" :label="i.Username" :key="i.Username">
-                <Tag color="geekblue" :key="i.Username"> {{i.Username}}</Tag>
-              </Checkbox>
-            </CheckboxGroup>
-          </FormItem>
-          <Divider orientation="left">管理权限</Divider>
-          <FormItem label="用户管理权限:">
-            <RadioGroup v-model="permission.user">
-              <Radio label="1" disabled>是</Radio>
-              <Radio label="0" disabled>否</Radio>
-            </RadioGroup>
-          </FormItem>
-          <FormItem label="数据库管理权限:">
-            <RadioGroup v-model="permission.base">
-              <Radio label="1" disabled>是</Radio>
-              <Radio label="0" disabled>否</Radio>
-            </RadioGroup>
-          </FormItem>
+          <CheckboxGroup v-model="permission.auditor">
+            <Checkbox v-for="i in auditor" :label="i.Username" :key="i.Username">
+              <Tag color="geekblue" :key="i.Username"> {{i.Username}}</Tag>
+            </Checkbox>
+          </CheckboxGroup>
+        </FormItem>
+        <Divider orientation="left">管理权限</Divider>
+        <FormItem label="用户管理权限:">
+          <RadioGroup v-model="permission.user">
+            <Radio label="1" disabled>是</Radio>
+            <Radio label="0" disabled>否</Radio>
+          </RadioGroup>
+        </FormItem>
+        <FormItem label="数据库管理权限:">
+          <RadioGroup v-model="permission.base">
+            <Radio label="1" disabled>是</Radio>
+            <Radio label="0" disabled>否</Radio>
+          </RadioGroup>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -241,7 +239,7 @@
                 })
                     .then(res => {
                         this.$config.notice(res.data);
-                        this.editInfoModal=false
+                        this.editInfoModal = false
                     })
                     .catch(err => this.$config.err_notice(this, err))
             },

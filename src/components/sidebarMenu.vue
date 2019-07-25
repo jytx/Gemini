@@ -5,7 +5,7 @@
       <MenuItem name="main">
         <Row>
           <Col span="12"><img src="../assets/logo_s.png" width="90%"></Col>
-          <Col span="12" style="font-weight: bold;font-size: 20px;padding-top: 20px;">Yearning</Col>
+          <Col span="12" style="font-weight: bold;font-size: 20px;padding-top: 20px;">Libra</Col>
         </Row>
       </MenuItem>
       <MenuItem name="home_index">

@@ -119,11 +119,20 @@
                               <span slot="close">关</span>
                             </i-switch>
                           </FormItem>
+                          <FormItem label="强制主键名为ID">
+                            <i-switch size="large" v-model="juno.DDLPrimaryKeyMust">
+                              <span slot="open">开</span>
+                              <span slot="close">关</span>
+                            </i-switch>
+                          </FormItem>
                           <FormItem label="打开OSC">
                             <i-switch size="large" v-model="juno.IsOSC">
                               <span slot="open">开</span>
                               <span slot="close">关</span>
                             </i-switch>
+                          </FormItem>
+                          <FormItem label="OSCMinTableSize">
+                            <InputNumber :min="0" v-model="juno.OscSize"  :formatter="value => `${value}m`"></InputNumber>
                           </FormItem>
                         </Form>
                       </Col>
@@ -150,7 +159,7 @@
                           <FormItem label="允许的字符集范围">
                             <Input v-model="juno.SupportCharset"></Input>
                           </FormItem>
-                          <FormItem label="建表时必须拥有哪些字段">
+                          <FormItem label="建表必须拥有字段">
                             <Input v-model="juno.MustHaveColumns"></Input>
                           </FormItem>
                         </Form>
@@ -202,6 +211,24 @@
                   </div>
                 </Card>
                 <br>
+
+                <Alert show-icon class="margin-left-10">
+                  注意事项
+                  <Icon type="ios-bulb-outline" slot="icon"></Icon>
+                  <template slot="desc">
+                    1.数值型规则0值都为不受限制。
+                    <br>
+                    2.开启检查时间字段默认值,所有时间类型字段都必须设置默认值且默认值必须为CURRENT_TIMESTAMP
+                    <br>
+                    3.osc相关规则请参考相关工具参数说明。
+                    <br>
+                    4.受制于各种条件影响, 影响行数判断并不一定准确,仅作为部分参考。
+                    <br>
+                    5.OSCMinTableSize当表体积大于该值时如果启动osc则走osc执行。
+                    <br>
+                    6.排序/字符集/建表必须拥有字段设置 请使用逗号分隔多个值
+                  </template>
+                </Alert>
                 <Button type="primary" @click="referRoles" long class="margin-left-10">保存</Button>
               </Col>
             </Row>
@@ -284,6 +311,17 @@
                         </Form>
                       </Col>
                     </Row>
+                  </div>
+                </Card>
+              </Col>
+              <Col span="12">
+                <Card class="margin-left-10">
+                  <p slot="title">
+                    <Icon type="md-flower"/>
+                    Gh-OST设置
+                  </p>
+                  <div>
+                    <h1>暂未开放</h1>
                   </div>
                 </Card>
               </Col>

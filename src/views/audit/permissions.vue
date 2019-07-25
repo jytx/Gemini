@@ -18,7 +18,7 @@
 
     <Modal v-model="editInfodModal" :width="800">
       <h3 slot="header" style="color:#2D8CF0">权限申请单</h3>
-      <Form :label-width="120" label-position="right">
+      <Form :label-width="120" label-position="top">
         <template>
           <FormItem label="DDL及索引权限:">
             <RadioGroup v-model="perList.ddl">
