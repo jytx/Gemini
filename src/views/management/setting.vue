@@ -224,14 +224,32 @@
         },
         methods: {
             handleAdd() {
-                this.other.idc.push(this.other.foce)
+                for (let i of this.other.idc) {
+                    if (i === this.other.foce) {
+                        this.$Message.error("请勿添加相同环境！");
+                        return
+                    }
+                }
+                this.other.idc.push(this.other.foce);
                 this.other.foce = ''
             },
             handleAdd1() {
+                for (let i of this.other.insulate_word_list) {
+                    if (i === this.other.sensitive) {
+                        this.$Message.error("请勿添加相同脱敏字段！");
+                        return
+                    }
+                }
                 this.other.insulate_word_list.push(this.other.sensitive);
                 this.other.sensitive = ''
             },
             handleAdd_exclued_db() {
+                for (let i of this.other.exclude_db_list) {
+                    if (i === this.other.exclued_db) {
+                        this.$Message.error("请勿添加相同数据库！");
+                        return
+                    }
+                }
                 this.other.exclude_db_list.push(this.other.exclued_db)
                 this.other.exclued_db = ''
             },

@@ -16,6 +16,7 @@
             icon="ios-cloud-download"
             @click.native="exportdata()"
             v-if="export_data"
+            class="margin-left-10"
     >导出查询数据
     </Button>
     <br>
