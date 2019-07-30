@@ -8,7 +8,7 @@
     <br>
     <p>当前选择的库: {{dataBase}}</p>
     <br>
-    <Button type="warning" icon="md-trash" @click.native="clearObj()">清除</Button>
+    <Button type="error" icon="md-trash" @click.native="clearObj()">清除</Button>
     <Button type="info" icon="ios-analytics" @click.native="fetchTableField()" class="margin-left-10">获取表结构</Button>
     <Button type="success" icon="ios-redo" @click.native="querySQL()" class="margin-left-10">查询</Button>
     <Button
@@ -19,6 +19,7 @@
             class="margin-left-10"
     >导出查询数据
     </Button>
+    <Button type="warning" @click="beauty" :loading="loading" class="margin-left-10">美化</Button>
     <br>
     <br>
     <p>查询结果:</p>
@@ -113,6 +114,15 @@
             }
         },
         methods: {
+            beauty() {
+                axios.put(`${this.$config.url}/query/beauty`, {
+                    'sql': this.formItem.textarea
+                })
+                    .then(res => {
+                        this.formItem.textarea = res.data
+                    })
+                    .catch(err => this.$config.err_notice(this, err))
+            },
             fetchTableField() {
                 if (this.dataBase === '' || this.table === '') {
                     this.$Message.error("请选中对应库/表");
@@ -198,6 +208,10 @@
                         this.$Spin.hide()
                     })
             }
+        },
+        mounted() {
+            this.loadData()
+
         }
     }
 </script>

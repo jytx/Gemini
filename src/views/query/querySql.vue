@@ -62,10 +62,6 @@
 
     <Drawer title="DML语句快速提交" :closable="false" v-model="drawer.open" width="700" transfer>
       <Form :rules="ruleValidate" ref="referOrder" :model="referOrder">
-        <FormItem>
-          <editor v-model="referOrder.textarea" @init="editorInit" @setCompletions="setCompletions"></editor>
-        </FormItem>
-
         <FormItem label="环境:" prop="idc">
           <Select v-model="referOrder.idc" @on-change="fetchSource">
             <Option v-for="i in fetchData.idc" :key="i" :value="i">{{i}}</Option>
@@ -111,6 +107,9 @@
                       v-model="referOrder.delay" @on-change="referOrder.delay=$event"
                       :editable="false"></DatePicker>
         </FormItem>
+        <FormItem>
+          <editor v-model="referOrder.textarea" @init="editorInit" @setCompletions="setCompletions"></editor>
+        </FormItem>
       </Form>
 
       <Form :label-width="30">
@@ -122,14 +121,15 @@
           >清除
           </Button>
           <Button type="primary" icon="md-search" @click.native="testSql()" :loading="loading"
-                  style="margin-left: 5%">检测
+                  class="margin-left-10">检测
           </Button>
+          <Button type="warning" @click="beauty" :loading="loading" class="margin-left-10">美化</Button>
           <Button
                   type="success"
                   icon="ios-redo"
                   @click.native="commitOrder()"
                   :disabled="this.validate_gen"
-                  style="margin-left: 5%"
+                  class="margin-left-10"
           >提交
           </Button>
         </FormItem>
@@ -249,6 +249,15 @@
             }
         },
         methods: {
+            beauty() {
+                axios.put(`${this.$config.url}/query/beauty`, {
+                    'sql': this.referOrder.textarea
+                })
+                    .then(res => {
+                        this.referOrder.textarea = res.data
+                    })
+                    .catch(err => this.$config.err_notice(this, err))
+            },
             cur(vl) {
               this.currentTab = vl
             },
@@ -316,7 +325,7 @@
                     if (valid) {
                         this.loading = true;
                         axios.put(`${this.$config.url}/fetch/test`, {
-                            'database': this.put_info.base,
+                            'database': this.referOrder.database,
                             'sql': this.referOrder.textarea,
                             'isDMl': true,
                             'source': this.data1[0].title

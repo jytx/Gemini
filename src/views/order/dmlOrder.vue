@@ -24,9 +24,9 @@
                 <FormItem label="连接名:" prop="source">
                   <Select v-model="formItem.source" @on-change="fetchBase">
                     <Option
-                      v-for="i in fetchData.source"
-                      :value="i"
-                      :key="i"
+                            v-for="i in fetchData.source"
+                            :value="i"
+                            :key="i"
                     >{{ i }}
                     </Option>
                   </Select>
@@ -63,24 +63,28 @@
               </Form>
               <Form>
                 <FormItem>
-                  <Col span="7">
+                  <Col span="5" class="margin-left-10">
                     <Button
-                      type="error"
-                      icon="md-trash"
-                      @click.native="clearForm()"
-                    >清除
+                            type="error"
+                            icon="md-trash"
+                            @click.native="clearForm()"
+                    >重置
                     </Button>
                   </Col>
-                  <Col span="7" offset="1">
+                  <Col span="5" class="margin-left-10">
                     <Button type="primary" icon="md-search" @click.native="testSql()" :loading="loading">检测
                     </Button>
                   </Col>
-                  <Col span="7" offset="1">
+                  <Col span="5" class="margin-left-10">
+                    <Button type="warning" icon="ios-brush" @click.native="beauty()" :loading="loading">美化
+                    </Button>
+                  </Col>
+                  <Col span="5" class="margin-left-10">
                     <Button
-                      type="success"
-                      icon="ios-redo"
-                      @click.native="commitOrder()"
-                      :disabled="this.validate_gen"
+                            type="success"
+                            icon="ios-redo"
+                            @click.native="commitOrder()"
+                            :disabled="this.validate_gen"
                     >提交
                     </Button>
                   </Col>
@@ -117,217 +121,227 @@
   </div>
 </template>
 <script>
-  import axios from 'axios'
-  import editor from '../../components/editor'
-  export default {
-    components: {
-      editor:  editor
-    },
-    name: 'SQLsyntax',
-    data () {
-      return {
-        invalidDate: {
-          disabledDate (date) {
-            return date && date.valueOf() < Date.now() - 86400000
-          }
+    import axios from 'axios'
+    import editor from '../../components/editor'
+
+    export default {
+        components: {
+            editor: editor
         },
-        validate_gen: true,
-        formItem: {
-          text: '',
-          idc: '',
-          source: '',
-          database: '',
-          table: '',
-          backup: 0,
-          assigned: '',
-          delay: null,
-          textarea: ''
-        },
-        testColumns: [
-          {
-            title: '阶段',
-            key: 'Status',
-            width: '150'
-          },
-          {
-            title: '错误等级',
-            key: 'Level',
-            width: '100'
-          },
-          {
-            title: '错误信息',
-            key: 'Error',
-            tooltip: true
-          },
-          {
-            title: '当前检查的sql',
-            key: 'SQL',
-            tooltip: true
-          },
-          {
-            title: '影响行数',
-            key: 'AffectRows',
-            width: '120'
-          }
-        ],
-        Testresults: [],
-        item: {},
-        ruleValidate: {
-          idc: [{
-            required: true,
-            message: '环境地址不得为空',
-            trigger: 'change'
-          }],
-          source: [{
-            required: true,
-            message: '连接名不得为空',
-            trigger: 'change'
-          }],
-          database: [{
-            required: true,
-            message: '数据库名不得为空',
-            trigger: 'change'
-          }],
-          text: [{
-            required: true,
-            message: '说明不得为空',
-            trigger: 'blur'
-          }
-          ],
-          assigned: [{
-            required: true,
-            message: '审核人不得为空',
-            trigger: 'change'
-          }]
-        },
-        id: null,
-        assigned: [],
-        wordList: [],
-        loading: false,
-        fetchData: {
-          idc: [],
-          source: [],
-          base: [],
-          table: [],
-          assigned: []
-        }
-      }
-    },
-    methods: {
-      setCompletions (editor, session, pos, prefix, callback) {
-        callback(null, this.wordList.map(function (word) {
-          return {
-            caption: word.vl,
-            value: word.vl,
-            meta: word.meta
-          }
-        }))
-      },
-      editorInit: function () {
-        require('brace/mode/mysql')
-        require('brace/theme/xcode')
-      },
-      clearForm () {
-        this.formItem = this.$config.clearObj(this.formItem)
-      },
-      fetchIDC () {
-        axios.get(`${this.$config.url}/fetch/idc`)
-          .then(res => {
-            this.fetchData.idc = res.data;
-          })
-          .catch(error => {
-            this.$config.err_notice(this, error)
-          })
-      },
-      fetchSource (idc) {
-        if (idc) {
-          axios.get(`${this.$config.url}/fetch/source/${idc}/dml`)
-            .then(res => {
-              if (res.data.x === 'dml') {
-                this.fetchData.source = res.data.source;
-                this.fetchData.assigned = res.data.assigned
-              } else {
-                this.$config.notice('非法劫持参数！')
-              }
-            })
-            .catch(error => {
-              this.$config.err_notice(this, error)
-            })
-        }
-      },
-      fetchBase (source) {
-        if (source) {
-          axios.get(`${this.$config.url}/fetch/base/${source}`)
-            .then(res => {
-              this.fetchData.base = res.data;
-            })
-            .catch(error => {
-              this.$config.err_notice(this, error)
-            })
-        }
-      },
-      testSql () {
-        this.$refs['formItem'].validate((valid) => {
-          if (valid) {
-            this.loading = true;
-            axios.put(`${this.$config.url}/fetch/test`, {
-              'source': this.formItem.source,
-              'database': this.formItem.database,
-              'sql': this.formItem.textarea,
-              'isDMl': true
-            })
-              .then(res => {
-                this.Testresults = res.data;
-                let gen = 0;
-                this.Testresults.forEach(vl => {
-                  if (vl.Level !== 0) {
-                    gen += 1
-                  }
-                });
-                if (gen === 0) {
-                  this.validate_gen = false
-                } else {
-                  this.validate_gen = true
+        name: 'SQLsyntax',
+        data() {
+            return {
+                invalidDate: {
+                    disabledDate(date) {
+                        return date && date.valueOf() < Date.now() - 86400000
+                    }
+                },
+                validate_gen: true,
+                formItem: {
+                    text: '',
+                    idc: '',
+                    source: '',
+                    database: '',
+                    table: '',
+                    backup: 0,
+                    assigned: '',
+                    delay: null,
+                    textarea: ''
+                },
+                testColumns: [
+                    {
+                        title: '阶段',
+                        key: 'Status',
+                        width: '150'
+                    },
+                    {
+                        title: '错误等级',
+                        key: 'Level',
+                        width: '100'
+                    },
+                    {
+                        title: '错误信息',
+                        key: 'Error',
+                        tooltip: true
+                    },
+                    {
+                        title: '当前检查的sql',
+                        key: 'SQL',
+                        tooltip: true
+                    },
+                    {
+                        title: '影响行数',
+                        key: 'AffectRows',
+                        width: '120'
+                    }
+                ],
+                Testresults: [],
+                item: {},
+                ruleValidate: {
+                    idc: [{
+                        required: true,
+                        message: '环境地址不得为空',
+                        trigger: 'change'
+                    }],
+                    source: [{
+                        required: true,
+                        message: '连接名不得为空',
+                        trigger: 'change'
+                    }],
+                    database: [{
+                        required: true,
+                        message: '数据库名不得为空',
+                        trigger: 'change'
+                    }],
+                    text: [{
+                        required: true,
+                        message: '说明不得为空',
+                        trigger: 'blur'
+                    }
+                    ],
+                    assigned: [{
+                        required: true,
+                        message: '审核人不得为空',
+                        trigger: 'change'
+                    }]
+                },
+                id: null,
+                assigned: [],
+                wordList: [],
+                loading: false,
+                fetchData: {
+                    idc: [],
+                    source: [],
+                    base: [],
+                    table: [],
+                    assigned: []
                 }
-                this.loading = false
-              })
-              .catch(err => {
-                this.loading = false;
-                this.$config.err_notice(err)
-              })
-          } else {
-            this.$Message.error('请填写具体地址或sql语句后再测试!')
-          }
-        })
-      },
-      commitOrder () {
-        this.$refs['formItem'].validate((valid) => {
-          if (valid) {
-            axios.post(`${this.$config.url}/sql/refer`, {
-              'ddl': this.formItem,
-              'sql': this.formItem.textarea,
-              'ty': 1
-            })
-              .then(res => {
-                this.validate_gen = true;
-                this.$Notice.success({
-                  title: '成功',
-                  desc: res.data
+            }
+        },
+        methods: {
+            beauty() {
+                axios.put(`${this.$config.url}/query/beauty`, {
+                    'sql': this.formItem.textarea
                 })
-              })
-              .catch(error => {
-                this.validate_gen = true;
-                this.$config.err_notice(this, error)
-              })
-          }
-        })
-      }
-    },
-    mounted () {
-      this.fetchIDC();
-      for (let i of this.$config.highlight.split('|')) {
-        this.wordList.push({'vl': i, 'meta': '关键字'})
-      }
+                    .then(res => {
+                        this.formItem.textarea = res.data
+                    })
+                    .catch(err => this.$config.err_notice(this, err))
+            },
+            setCompletions(editor, session, pos, prefix, callback) {
+                callback(null, this.wordList.map(function (word) {
+                    return {
+                        caption: word.vl,
+                        value: word.vl,
+                        meta: word.meta
+                    }
+                }))
+            },
+            editorInit: function () {
+                require('brace/mode/mysql')
+                require('brace/theme/xcode')
+            },
+            clearForm() {
+                this.formItem = this.$config.clearObj(this.formItem)
+            },
+            fetchIDC() {
+                axios.get(`${this.$config.url}/fetch/idc`)
+                    .then(res => {
+                        this.fetchData.idc = res.data;
+                    })
+                    .catch(error => {
+                        this.$config.err_notice(this, error)
+                    })
+            },
+            fetchSource(idc) {
+                if (idc) {
+                    axios.get(`${this.$config.url}/fetch/source/${idc}/dml`)
+                        .then(res => {
+                            if (res.data.x === 'dml') {
+                                this.fetchData.source = res.data.source;
+                                this.fetchData.assigned = res.data.assigned
+                            } else {
+                                this.$config.notice('非法劫持参数！')
+                            }
+                        })
+                        .catch(error => {
+                            this.$config.err_notice(this, error)
+                        })
+                }
+            },
+            fetchBase(source) {
+                if (source) {
+                    axios.get(`${this.$config.url}/fetch/base/${source}`)
+                        .then(res => {
+                            this.fetchData.base = res.data;
+                        })
+                        .catch(error => {
+                            this.$config.err_notice(this, error)
+                        })
+                }
+            },
+            testSql() {
+                this.$refs['formItem'].validate((valid) => {
+                    if (valid) {
+                        this.loading = true;
+                        axios.put(`${this.$config.url}/fetch/test`, {
+                            'source': this.formItem.source,
+                            'database': this.formItem.database,
+                            'sql': this.formItem.textarea,
+                            'isDMl': true
+                        })
+                            .then(res => {
+                                this.Testresults = res.data;
+                                let gen = 0;
+                                this.Testresults.forEach(vl => {
+                                    if (vl.Level !== 0) {
+                                        gen += 1
+                                    }
+                                });
+                                if (gen === 0) {
+                                    this.validate_gen = false
+                                } else {
+                                    this.validate_gen = true
+                                }
+                                this.loading = false
+                            })
+                            .catch(err => {
+                                this.loading = false;
+                                this.$config.err_notice(err)
+                            })
+                    } else {
+                        this.$Message.error('请填写具体地址或sql语句后再测试!')
+                    }
+                })
+            },
+            commitOrder() {
+                this.$refs['formItem'].validate((valid) => {
+                    if (valid) {
+                        axios.post(`${this.$config.url}/sql/refer`, {
+                            'ddl': this.formItem,
+                            'sql': this.formItem.textarea,
+                            'ty': 1
+                        })
+                            .then(res => {
+                                this.validate_gen = true;
+                                this.$Notice.success({
+                                    title: '成功',
+                                    desc: res.data
+                                })
+                            })
+                            .catch(error => {
+                                this.validate_gen = true;
+                                this.$config.err_notice(this, error)
+                            })
+                    }
+                })
+            }
+        },
+        mounted() {
+            this.fetchIDC();
+            for (let i of this.$config.highlight.split('|')) {
+                this.wordList.push({'vl': i, 'meta': '关键字'})
+            }
+        }
     }
-  }
 </script>

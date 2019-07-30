@@ -100,10 +100,11 @@
                     <Table :columns="testColumns" :data="testResults" highlight-row></Table>
                   </FormItem>
                   <FormItem>
-                    <Button type="warning" @click="testSql" :loading="loading">检测语句</Button>
+                    <Button type="primary" @click="testSql" :loading="loading">检测语句</Button>
+                    <Button type="warning" @click="beauty" :loading="loading" class="margin-left-10">美化</Button>
                     <Button
                             type="success"
-                            style="margin-left: 3%"
+                            class="margin-left-10"
                             @click="commitOrder"
                             :disabled="validate_gen"
                     >提交工单
@@ -274,6 +275,15 @@
             }
         },
         methods: {
+            beauty() {
+                axios.put(`${this.$config.url}/query/beauty`, {
+                    'sql': this.formDynamic
+                })
+                    .then(res => {
+                        this.formDynamic = res.data
+                    })
+                    .catch(err => this.$config.err_notice(this, err))
+            },
             setCompletions(editor, session, pos, prefix, callback) {
                 callback(null, this.wordList.map(function (word) {
                     return {
@@ -439,7 +449,7 @@
             for (let i of this.$config.highlight.split('|')) {
                 this.wordList.push({'vl': i, 'meta': '关键字'})
             }
-            this.fetchIDC()
+            this.fetchIDC();
         }
     }
 </script>

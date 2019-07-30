@@ -177,7 +177,6 @@
         <Button type="warning" @click.native="testTo()" :loading="loading">
           <span v-if="!loading">检测sql</span>
           <span v-else>检测中</span></Button>
-        <!--        <template v-if="switch_show">-->
         <template v-if="multi">
           <Button type="error" @click="rejectTo()" v-if="auth === 'admin'">驳回</Button>
           <Button type="success" @click="agreedTo()" :disabled="summit" v-if="auth === 'admin'">同意</Button>
@@ -187,7 +186,6 @@
           <Button type="error" @click="rejectTo()">驳回</Button>
           <Button type="success" @click="performTo()" :disabled="summit">执行</Button>
         </template>
-        <!--        </template>-->
       </div>
     </Modal>
 
@@ -217,8 +215,7 @@
                 sql_columns: [
                     {
                         title: '当前检查的sql',
-                        key: 'SQL',
-                        tooltip: true
+                        key: 'SQL'
                     },
                     {
                         title: '阶段',
@@ -453,7 +450,7 @@
                 this.loading = true;
                 let s = '';
                 for (let i of this.sql) {
-                    s += i.sql
+                    s += i.SQL
                 }
                 let isDML = false;
                 if (this.formitem.Type === 1) {
