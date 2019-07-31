@@ -19,7 +19,7 @@
             class="margin-left-10"
     >导出查询数据
     </Button>
-    <Button type="warning" @click="beauty" :loading="loading" class="margin-left-10">美化</Button>
+    <Button type="warning" @click="beauty" class="margin-left-10">美化</Button>
     <br>
     <br>
     <p>查询结果:</p>
@@ -208,10 +208,6 @@
                         this.$Spin.hide()
                     })
             }
-        },
-        mounted() {
-            this.loadData()
-
         }
     }
 </script>

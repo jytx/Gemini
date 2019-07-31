@@ -101,6 +101,7 @@
                   </FormItem>
                   <FormItem>
                     <Button type="primary" @click="testSql" :loading="loading">检测语句</Button>
+                    <Button type="info" @click="merge" :loading="loading" class="margin-left-10">ALTER语句合并</Button>
                     <Button type="warning" @click="beauty" :loading="loading" class="margin-left-10">美化</Button>
                     <Button
                             type="success"
@@ -275,6 +276,19 @@
             }
         },
         methods: {
+            merge() {
+                axios.put(`${this.$config.url}/query/merge`, {
+                    'sql': this.formDynamic
+                })
+                    .then(res => {
+                        if (!res.data.e) {
+                            this.formDynamic = res.data.sols
+                        } else {
+                            this.$config.notice(res.err)
+                        }
+                    })
+                    .catch(err => this.$config.err_notice(this, err))
+            },
             beauty() {
                 axios.put(`${this.$config.url}/query/beauty`, {
                     'sql': this.formDynamic
