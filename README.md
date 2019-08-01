@@ -3,14 +3,14 @@
 </p>
 
 # Gemini  
-### Libra Web Pages Farmwork
+### Yearning Web Pages Farmwork
 ![LICENSE](https://img.shields.io/badge/license-AGPL%20-blue.svg)
 ![](https://img.shields.io/badge/build-release-brightgreen.svg)  
 ![](https://img.shields.io/badge/version-v2.0.0-brightgreen.svg) 
 ![](https://img.shields.io/badge/webpack-v4.0.0-brightgreen.svg) 
 
 ## Feature
-Mysql SQL语句审核平台 Libra 前端页面代码
+Mysql SQL语句审核平台 Yearning 前端页面代码
 
 ## Website
 [www.yearning.io](http://yearning.io)

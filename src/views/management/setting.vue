@@ -176,6 +176,12 @@
                         </i-switch>
                       </Form-item>
                     </Col>
+                    <Col span="8">
+                      <Form-item label="查询时限:">
+                        <InputNumber :max="600" :min="0" v-model="other.ex_query_time"
+                                     :formatter="value => `${value}分钟`"></InputNumber>
+                      </Form-item>
+                    </Col>
                   </Row>
                 </Form>
               </Card>

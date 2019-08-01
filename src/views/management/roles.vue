@@ -9,7 +9,7 @@
           </p>
           <div>
             <Row>
-              <Col span="12">
+              <Col span="16">
                 <Card>
                   <p slot="title">
                     <Icon type="md-flower"/>
@@ -168,7 +168,7 @@
                   </div>
                 </Card>
               </Col>
-              <Col span="12">
+              <Col span="8">
                 <Card class="margin-left-10">
                   <p slot="title">
                     <Icon type="md-flower"/>
@@ -212,7 +212,7 @@
                 </Card>
                 <br>
 
-                <Alert show-icon class="margin-left-10">
+                <Alert show-icon class="margin-left-10" type="warning">
                   注意事项
                   <Icon type="ios-bulb-outline" slot="icon"></Icon>
                   <template slot="desc">
@@ -318,7 +318,7 @@
                 <Card class="margin-left-10">
                   <p slot="title">
                     <Icon type="md-flower"/>
-                    Gh-OST设置
+                    SOAR设置
                   </p>
                   <div>
                     <h1>暂未开放</h1>

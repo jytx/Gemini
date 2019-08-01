@@ -4,7 +4,7 @@ import {appRouter} from '../router'
 
 let util = {}
 util.title = function (title) {
-    title = title || 'Libra SQL审核平台'
+    title = title || 'Yearning SQL审核平台'
     window.document.title = title
 }
 

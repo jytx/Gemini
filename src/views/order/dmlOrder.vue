@@ -6,7 +6,7 @@
 <template>
   <div>
     <Row>
-      <Col span="7">
+      <Col span="6">
         <Card>
           <p slot="title">
             <Icon type="ios-redo"></Icon>
@@ -105,7 +105,7 @@
           </div>
         </Card>
       </Col>
-      <Col span="17" class="padding-left-10">
+      <Col span="18" class="padding-left-10">
         <Card>
           <p slot="title">
             <Icon type="ios-crop"></Icon>

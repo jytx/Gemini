@@ -86,7 +86,7 @@
       return {
         export: false,
         stepData: {
-          title: 'Libra SQL查询系统',
+          title: 'Yearning SQL查询系统',
           describe: `欢迎你！ ${sessionStorage.getItem('user')}`
         },
         stepList1: [

@@ -15,7 +15,7 @@
             <breadcrumb-nav :currentPath="currentPath"></breadcrumb-nav>
           </div>
         <div class="header-avator-con">
-          <a href="https://libra.yearning.io/" target="_Blank">使用说明</a>
+          <a href="https://Yearning.yearning.io/" target="_Blank">使用说明</a>
           <div @click="handleFullScreen" v-if="showFullScreenBtn" class="full-screen-btn-con">
             <Tooltip :content="isFullScreen ? '退出全屏' : '全屏'" placement="bottom">
               <Icon :type="isFullScreen ? 'md-contract' : 'md-expand'" :size="23"></Icon>
@@ -64,13 +64,13 @@
     >
       <h3>关于Libra:</h3>
       <br>
-      <p>Libra MYSQL SQL语句审核平台。提供查询，SQL审核等多种功能。非常欢迎大家体验并使用Libra!</p>
+      <p>Yearning MYSQL SQL语句审核平台。提供查询，SQL审核等多种功能。非常欢迎大家体验并使用Libra!</p>
       <br>
       <H3>关于二次开发的声明:</H3>
       <br>
       <p>
         作为一款开源平台。Libra很希望有更多的开发者一起参与到开发中。同时也鼓励各公司根据自身业务对平台进行二次开发及定制。
-        Libra 采用AGPL 3.0许可证,以下为许可中相关的义务与责任。
+        Yearning 采用AGPL 3.0许可证,以下为许可中相关的义务与责任。
       </p>
       <br>
       <p>1.未经原作者授权不得将Libra 用于任何商业目的。包括通过网络提供任何基于Libra的商业服务。</p>

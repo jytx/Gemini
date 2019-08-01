@@ -33,7 +33,7 @@
             <div class="container">
                 <div class="navbar-translate">
                     <a class="navbar-brand">
-                        版本号: v2.0.0 RC v0.1.1
+                        版本号: v2.0.0 GA
                     </a>
                     <Button v-if="switchCode" type="default" ghost @click="register= true">创建用户</Button>
                 </div>
@@ -43,7 +43,7 @@
                             <a class="nav-link" @click="sponsorship = true">赞助/技术协助</a>
                         </li>
                         <li>
-                            <a href="https://github.com/cookieY/Libra" target="_blank">
+                            <a href="https://github.com/cookieY/Yearning" target="_blank">
                                 <Icon type="logo-github" size="30"/>
                             </a>
                         </li>
@@ -88,7 +88,7 @@
                             <li>
                                 <Tooltip content="yearning.io" placement="top-start">
                                     <a class="nav-link" href="https://yearning.io">
-                                        关于Libra
+                                        关于Yearning
                                     </a>
                                 </Tooltip>
                             </li>

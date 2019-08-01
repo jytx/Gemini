@@ -191,6 +191,14 @@
                     'basename': this.dataBase
                 })
                     .then(res => {
+                        if (res.data.status) {
+                            this.$router.push({
+                                name: 'query'
+                            });
+                            this.$config.notice("已到查询时限上限,请重新申请查询！")
+                            this.$Spin.hide();
+                            return
+                        }
                         if (res.data.data === null) {
                             this.$config.err_notice(this, '没有查询结果!')
                         } else if (!res.data['data']) {

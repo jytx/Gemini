@@ -94,8 +94,13 @@
                   <Button type="primary" @click="openOrder(row)" size="small" ghost
                           v-if="row.Status === 2 || auth==='perform' && row.Status === 5">审批
                   </Button>
-                  <Button type="success" @click="orderDetail(row)" v-if="row.Status !== 2" size="small" ghost>
+                  <Button type="success" @click="orderDetail(row)" v-if="row.Status !== 2 && row.Status !== 3"
+                          size="small" ghost>
                     执行结果
+                  </Button>
+                  <Button type="error" @click="delayKill(row)" v-if="row.Status === 3 && row.Delay !== 'none'"
+                          size="small" ghost>
+                    延时工单中止
                   </Button>
                   <Button ghost size="small" class="margin-left-10" @click="timerOsc(row)"
                           v-if="row.Status === 3 && row.Type === 0" type="warning">osc进度
@@ -355,6 +360,14 @@
             }
         },
         methods: {
+            delayKill(vl) {
+                axios.get(`${this.$config.url}/audit/kill/${vl.WorkId}`)
+                    .then(res => {
+                        this.$config.notice(res.data);
+                        this.refreshData()
+                    })
+                    .catch(err => this.$config.err_notice(this, err))
+            },
             timerOsc(vl) {
                 this.osc.open = true;
                 this.osc.current = 0;
