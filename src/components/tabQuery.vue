@@ -6,7 +6,8 @@
   <div>
     <editor v-model="formItem.textarea" @init="editorInit" @setCompletions="setCompletions"></editor>
     <br>
-    <p>当前选择的库: {{dataBase}}</p>
+    <span>当前选择的库: {{dataBase}}</span> <span class="margin-left-10">查询耗时: {{queryTime}} ms</span>
+    <br>
     <br>
     <Button type="error" icon="md-trash" @click.native="clearObj()">清除</Button>
     <Button type="info" icon="ios-analytics" @click.native="fetchTableField()" class="margin-left-10">获取表结构</Button>
@@ -107,10 +108,16 @@
                         editable: true
                     },
                     {
+                        title: '索引类型',
+                        key: 'Key',
+                        editable: true
+                    },
+                    {
                         title: '备注',
                         key: 'Comment'
                     }
                 ],
+                queryTime: ''
             }
         },
         methods: {
@@ -140,7 +147,7 @@
             },
             exportdata() {
                 exportcsv({
-                    filename: 'Libra_Data',
+                    filename: 'Yearning_Data',
                     original: true,
                     data: this.allQueryData,
                     columns: this.columnsName
@@ -204,6 +211,7 @@
                         } else if (!res.data['data']) {
                             this.$config.err_notice(this, res.data)
                         } else {
+                            this.queryTime = res.data.time;
                             this.columnsName = res.data['title']
                             this.allQueryData = res.data['data']
                             this.queryRes = this.allQueryData.slice(0, 10)
