@@ -125,6 +125,12 @@
                               <span slot="close">关</span>
                             </i-switch>
                           </FormItem>
+                          <FormItem label="强制主键为自增列">
+                            <i-switch size="large" v-model="juno.DDLEnableAutoIncrement">
+                              <span slot="open">开</span>
+                              <span slot="close">关</span>
+                            </i-switch>
+                          </FormItem>
                           <FormItem label="打开OSC">
                             <i-switch size="large" v-model="juno.IsOSC">
                               <span slot="open">开</span>
