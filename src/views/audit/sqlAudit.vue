@@ -94,7 +94,7 @@
                   <Button type="primary" @click="openOrder(row)" size="small" ghost
                           v-if="row.Status === 2 || auth==='perform' && row.Status === 5">审批
                   </Button>
-                  <Button type="success" @click="orderDetail(row)" v-if="row.Status !== 2 && row.Status !== 3"
+                  <Button type="success" @click="orderDetail(row)" v-if="row.Status === 1 || row.Status === 4"
                           size="small" ghost>
                     执行结果
                   </Button>
@@ -183,7 +183,7 @@
           <span v-if="!loading">检测sql</span>
           <span v-else>检测中</span></Button>
         <template v-if="multi">
-          <Button type="error" @click="rejectTo()" v-if="auth === 'admin'">驳回</Button>
+          <Button type="error" @click="rejectTo()">驳回</Button>
           <Button type="success" @click="agreedTo()" :disabled="summit" v-if="auth === 'admin'">同意</Button>
           <Button type="success" @click="performTo()" v-else-if="auth === 'perform'">执行</Button>
         </template>
@@ -220,7 +220,21 @@
                 sql_columns: [
                     {
                         title: '当前检查的sql',
-                        key: 'SQL'
+                        key: 'SQL',
+                        render: (h, params) => {
+                            let text = params.row.SQL.substring(0, 40) + '...';
+                            return h('Tooltip', {
+                                props: {
+                                    maxWidth: '300',
+                                    content: params.row.SQL,
+                                    transfer: true,
+                                    placement: 'bottom-start'
+                                }
+                            },[
+                                h('span',text)
+                            ])
+                        }
+
                     },
                     {
                         title: '阶段',

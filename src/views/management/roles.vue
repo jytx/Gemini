@@ -61,20 +61,20 @@
                               <span slot="close">关</span>
                             </i-switch>
                           </FormItem>
-                          <FormItem label="允许设置排列顺序">
-                            <i-switch size="large" v-model="juno.EnableSetCollation">
+                          <FormItem label="开启索引名称规范">
+                            <i-switch size="large" v-model="juno.DDLIndexNameSpec">
                               <span slot="open">开</span>
                               <span slot="close">关</span>
                             </i-switch>
                           </FormItem>
-                          <FormItem label="允许设置字符集">
-                            <i-switch size="large" v-model="juno.EnableSetCharset">
+                          <FormItem label="强制主键名为ID">
+                            <i-switch size="large" v-model="juno.DDLPrimaryKeyMust">
                               <span slot="open">开</span>
                               <span slot="close">关</span>
                             </i-switch>
                           </FormItem>
-                          <FormItem label="允许一个工单内有多条DDL语句">
-                            <i-switch size="large" v-model="juno.DDLMultiToSubmit">
+                          <FormItem label="强制主键为自增列">
+                            <i-switch size="large" v-model="juno.DDLEnableAutoIncrement">
                               <span slot="open">开</span>
                               <span slot="close">关</span>
                             </i-switch>
@@ -89,7 +89,7 @@
                               <span slot="close">关</span>
                             </i-switch>
                           </FormItem>
-                          <FormItem label="检查自增列设置无符号标志unsigned">
+                          <FormItem label="检查无符号标志unsigned">
                             <i-switch size="large" v-model="juno.DDLEnableAutoincrementUnsigned">
                               <span slot="open">开</span>
                               <span slot="close">关</span>
@@ -113,20 +113,20 @@
                               <span slot="close">关</span>
                             </i-switch>
                           </FormItem>
-                          <FormItem label="开启索引名称规范">
-                            <i-switch size="large" v-model="juno.DDLIndexNameSpec">
+                          <FormItem label="允许设置排列顺序">
+                            <i-switch size="large" v-model="juno.EnableSetCollation">
                               <span slot="open">开</span>
                               <span slot="close">关</span>
                             </i-switch>
                           </FormItem>
-                          <FormItem label="强制主键名为ID">
-                            <i-switch size="large" v-model="juno.DDLPrimaryKeyMust">
+                          <FormItem label="允许设置字符集">
+                            <i-switch size="large" v-model="juno.EnableSetCharset">
                               <span slot="open">开</span>
                               <span slot="close">关</span>
                             </i-switch>
                           </FormItem>
-                          <FormItem label="强制主键为自增列">
-                            <i-switch size="large" v-model="juno.DDLEnableAutoIncrement">
+                          <FormItem label="允许工单多条DDL">
+                            <i-switch size="large" v-model="juno.DDLMultiToSubmit">
                               <span slot="open">开</span>
                               <span slot="close">关</span>
                             </i-switch>
@@ -137,8 +137,11 @@
                               <span slot="close">关</span>
                             </i-switch>
                           </FormItem>
-                          <FormItem label="OSCMinTableSize">
-                            <InputNumber :min="0" v-model="juno.OscSize"  :formatter="value => `${value}m`"></InputNumber>
+                          <FormItem label="允许字段类型转换">
+                            <i-switch size="large" v-model="juno.DDLAllowColumnType">
+                              <span slot="open">开</span>
+                              <span slot="close">关</span>
+                            </i-switch>
                           </FormItem>
                         </Form>
                       </Col>
@@ -167,6 +170,9 @@
                           </FormItem>
                           <FormItem label="建表必须拥有字段">
                             <Input v-model="juno.MustHaveColumns"></Input>
+                          </FormItem>
+                          <FormItem label="OSCMinTableSize">
+                            <InputNumber :min="0" v-model="juno.OscSize"  :formatter="value => `${value}m`"></InputNumber>
                           </FormItem>
                         </Form>
                       </Col>

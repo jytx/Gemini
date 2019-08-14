@@ -88,7 +88,7 @@
                 }
             }
         },
-        created() {
+        mounted() {
             axios.post(`${this.$config.url}/dash/initMenu`)
                 .then(res => {
                     let c = res.data.c;
