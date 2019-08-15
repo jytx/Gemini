@@ -153,6 +153,7 @@
                 axios.get(`${this.$config.url}/fetch/roll?workid=${this.$route.query.workid}`)
                     .then(res => {
                         this.formItem = res.data.order;
+                        this.formItem.Delay = 'none';
                     })
                     .catch(error => {
                         this.$config.err_notice(this, error)

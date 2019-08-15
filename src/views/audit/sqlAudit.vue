@@ -107,6 +107,10 @@
                   </Button>
                 </div>
               </template>
+              <template slot-scope="{ row }" slot="delay">
+                <span v-if="row.Delay !== 'none'">{{row.Delay}}</span>
+                <span v-else>无</span>
+              </template>
             </Table>
             <br>
             <Page :total="pagenumber" show-elevator @on-change="refreshData" :page-size="20" ref="page"></Page>
@@ -297,6 +301,11 @@
                         sortable: true
                     },
                     {
+                        title: '定时执行',
+                        key: 'Delay',
+                        slot: 'delay'
+                    },
+                    {
                         title: '执行人',
                         key: 'Executor',
                         sortable: true
@@ -340,7 +349,7 @@
                     {
                         title: '操作',
                         key: 'action',
-                        width: 180,
+                        width: 200,
                         align: 'center',
                         slot: 'action'
                     }

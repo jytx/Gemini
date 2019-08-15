@@ -9,7 +9,7 @@
           </p>
           <div>
             <Row>
-              <Col span="16">
+              <Col span="24">
                 <Card>
                   <p slot="title">
                     <Icon type="md-flower"/>
@@ -17,7 +17,7 @@
                   </p>
                   <div>
                     <Row>
-                      <Col span="8">
+                      <Col span="6">
                         <Form :label-width="150">
                           <FormItem label="检查表注释">
                             <i-switch size="large" v-model="juno.DDLCheckTableComment">
@@ -31,7 +31,7 @@
                               <span slot="close">关</span>
                             </i-switch>
                           </FormItem>
-                          <FormItem label="检查ddl语句有null值">
+                          <FormItem label="检查是否为not null">
                             <i-switch size="large" v-model="juno.DDLCheckColumnNullable">
                               <span slot="open">开</span>
                               <span slot="close">关</span>
@@ -81,7 +81,7 @@
                           </FormItem>
                         </Form>
                       </Col>
-                      <Col span="8">
+                      <Col span="6">
                         <Form :label-width="150">
                           <FormItem label="检查关键词">
                             <i-switch size="large" v-model="juno.CheckIdentifier">
@@ -145,8 +145,14 @@
                           </FormItem>
                         </Form>
                       </Col>
-                      <Col span="8">
+                      <Col span="6">
                         <Form :label-width="150">
+                          <FormItem label="允许主键类型非int/bigint">
+                            <i-switch size="large" v-model="juno.DDLAllowPRINotInt">
+                              <span slot="open">开</span>
+                              <span slot="close">关</span>
+                            </i-switch>
+                          </FormItem>
                           <FormItem label="单个索引指定字段上限">
                             <InputNumber :min="0" v-model="juno.DDLMaxKeyParts"></InputNumber>
                           </FormItem>
@@ -176,19 +182,7 @@
                           </FormItem>
                         </Form>
                       </Col>
-                    </Row>
-                  </div>
-                </Card>
-              </Col>
-              <Col span="8">
-                <Card class="margin-left-10">
-                  <p slot="title">
-                    <Icon type="md-flower"/>
-                    DML审核规则
-                  </p>
-                  <div>
-                    <Row>
-                      <Col span="8">
+                      <Col span="6">
                         <Form :label-width="150">
                           <FormItem label="检查插入语句存在列名">
                             <i-switch size="large" v-model="juno.DMLInsertColumns">
@@ -222,26 +216,6 @@
                     </Row>
                   </div>
                 </Card>
-                <br>
-
-                <Alert show-icon class="margin-left-10" type="warning">
-                  注意事项
-                  <Icon type="ios-bulb-outline" slot="icon"></Icon>
-                  <template slot="desc">
-                    1.数值型规则0值都为不受限制。
-                    <br>
-                    2.开启检查时间字段默认值,所有时间类型字段都必须设置默认值且默认值必须为CURRENT_TIMESTAMP
-                    <br>
-                    3.osc相关规则请参考相关工具参数说明。
-                    <br>
-                    4.受制于各种条件影响, 影响行数判断并不一定准确,仅作为部分参考。
-                    <br>
-                    5.OSCMinTableSize当表体积大于该值时如果启动osc则走osc执行。
-                    <br>
-                    6.排序/字符集/建表必须拥有字段设置 请使用逗号分隔多个值
-                  </template>
-                </Alert>
-                <Button type="primary" @click="referRoles" long class="margin-left-10">保存</Button>
               </Col>
             </Row>
             <br>
@@ -330,10 +304,27 @@
                 <Card class="margin-left-10">
                   <p slot="title">
                     <Icon type="md-flower"/>
-                    SOAR设置
+                    保存
                   </p>
                   <div>
-                    <h1>暂未开放</h1>
+                    <Alert show-icon class="margin-left-10" type="warning">
+                      注意事项
+                      <Icon type="ios-bulb-outline" slot="icon"></Icon>
+                      <template slot="desc">
+                        1.数值型规则0值都为不受限制。
+                        <br>
+                        2.开启检查时间字段默认值,所有时间类型字段都必须设置默认值且默认值必须为CURRENT_TIMESTAMP
+                        <br>
+                        3.osc相关规则请参考相关工具参数说明。
+                        <br>
+                        4.受制于各种条件影响, 影响行数判断并不一定准确,仅作为部分参考。
+                        <br>
+                        5.OSCMinTableSize当表体积大于该值时如果启动osc则走osc执行。
+                        <br>
+                        6.排序/字符集/建表必须拥有字段设置 请使用逗号分隔多个值
+                      </template>
+                    </Alert>
+                    <Button type="primary" @click="referRoles" long class="margin-left-10">保存</Button>
                   </div>
                 </Card>
               </Col>
