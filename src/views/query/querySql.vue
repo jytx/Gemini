@@ -16,7 +16,7 @@
 <template>
   <div>
     <Row>
-      <Col span="5">
+      <Col :span="5" v-if="showTableinfo">
         <Card>
           <p slot="title">
             <Icon type="ios-redo"></Icon>
@@ -40,12 +40,15 @@
           </div>
         </Card>
       </Col>
-      <Col span="19" class="padding-left-10">
+      <Col :span="slider2" class="padding-left-10">
         <Card>
           <p slot="title">
             <Icon type="ios-crop-strong"></Icon>
             填写sql语句
           </p>
+            <Button type="primary" icon="ios-skip-forward" @click="countAdd">隐藏数据列</Button>
+          <br>
+          <br>
           <Tabs type="card" :value="currentTab" @on-click="cur">
             <TabPane v-for="tab in tabs" :key="tab" :label="'查询' + tab" :name="'查询' + tab"
                      icon="logo-buffer">
@@ -161,6 +164,7 @@
         name: 'SearchSQL',
         data() {
             return {
+                slider2: 19,
                 currentTab: '查询1',
                 tableInfoName: '',
                 testRes: [],
@@ -245,10 +249,20 @@
                 },
                 export_data: false,
                 wordList: [],
-                tabs: 1
+                tabs: 1,
+                showTableinfo: true
             }
         },
         methods: {
+            countAdd() {
+                if (this.showTableinfo) {
+                    this.showTableinfo = false;
+                    this.slider2 = 24
+                } else {
+                    this.showTableinfo = true;
+                    this.slider2 = 19
+                }
+            },
             beauty() {
                 axios.put(`${this.$config.url}/query/beauty`, {
                     'sql': this.referOrder.textarea
@@ -259,7 +273,7 @@
                     .catch(err => this.$config.err_notice(this, err))
             },
             cur(vl) {
-              this.currentTab = vl
+                this.currentTab = vl
             },
             getTbale(vl) {
                 if (vl[0].children) {

@@ -196,13 +196,13 @@
                               <span slot="close">关</span>
                             </i-switch>
                           </FormItem>
-                          <FormItem label="检查dml语句order条件">
+                          <FormItem label="dml语句禁用order">
                             <i-switch size="large" v-model="juno.DMLOrder">
                               <span slot="open">开</span>
                               <span slot="close">关</span>
                             </i-switch>
                           </FormItem>
-                          <FormItem label="检查dml语句有select语句">
+                          <FormItem label="dml语句禁用select">
                             <i-switch size="large" v-model="juno.DMLSelect">
                               <span slot="open">开</span>
                               <span slot="close">关</span>

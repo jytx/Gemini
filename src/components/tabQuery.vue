@@ -26,7 +26,7 @@
     <p>查询结果:</p>
     <Table :columns="columnsName" :data="queryRes" highlight-row ref="table"></Table>
     <br>
-    <Page :total="total" show-total @on-change="splice_arr" ref="total"></Page>
+    <Page :total="total" show-total @on-change="splice_arr" ref="total"  show-sizer @on-page-size-change="ex_arr"></Page>
   </div>
 </template>
 
@@ -79,6 +79,7 @@
         },
         data() {
             return {
+                page_size: '',
                 columnsName: [],
                 queryRes: [],
                 allQueryData: [],
@@ -158,7 +159,11 @@
                 require('brace/theme/xcode')
             },
             splice_arr(page) {
-                this.queryRes = this.allQueryData.slice(page * 10 - 10, page * 10)
+                this.queryRes = this.allQueryData.slice(page * this.page_size - this.page_size, page * this.page_size)
+            },
+            ex_arr(n) {
+                this.page_size = n;
+                this.queryRes = this.allQueryData.slice(this.$refs.total.currentPage * n - n, this.$refs.total.currentPage * n)
             },
             clearObj() {
                 this.formItem.textarea = '';
