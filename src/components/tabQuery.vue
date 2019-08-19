@@ -79,7 +79,7 @@
         },
         data() {
             return {
-                page_size: '',
+                page_size: 10,
                 columnsName: [],
                 queryRes: [],
                 allQueryData: [],
