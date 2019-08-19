@@ -191,9 +191,9 @@
         },
         methods: {
             open_modal(vl) {
-                axios.get(`${this.$config.url}/audit/sql?k=${vl.WorkId}`)
+                axios.get(`${this.$config.url}/fetch/sql?k=${vl.WorkId}`)
                     .then(res => {
-                        this.sql = res.data.sql
+                        this.sql = res.data
                     })
                     .catch(err => this.$config.err_notice(this, err));
                 this.openModal = true;
