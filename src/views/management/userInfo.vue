@@ -133,14 +133,22 @@
                 } else {
                     callback()
                 }
-            }
+            };
             const valideuserinfoPassword = (rule, value, callback) => {
                 if (value !== this.userinfo.password) {
                     callback(new Error('两次输入密码不一致'))
                 } else {
                     callback()
                 }
-            }
+            };
+            const regExp_password = (rule, value, callback) => {
+                let pPattern = /^.*(?=.{6,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*? ]).*$/;
+                if (!pPattern.test(this.userinfo.password)) {
+                    callback(new Error('至少1个大写字母,1个小写字母,1个数字,1个特殊字符(!@#$%^&*?其中之一)'))
+                } else {
+                    callback()
+                }
+            };
             return {
                 query: {
                     user: '',
@@ -215,6 +223,10 @@
                         {
                             max: 32,
                             message: '最多输入32个字符',
+                            trigger: 'blur'
+                        },
+                        {
+                            validator: regExp_password,
                             trigger: 'blur'
                         }
                     ],

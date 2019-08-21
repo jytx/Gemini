@@ -246,6 +246,7 @@
                         return
                     }
                 }
+
                 this.other.insulate_word_list.push(this.other.sensitive);
                 this.other.sensitive = ''
             },
