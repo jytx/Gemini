@@ -46,7 +46,7 @@
             <Icon type="ios-crop-strong"></Icon>
             填写sql语句
           </p>
-            <Button type="primary" icon="ios-skip-forward" @click="countAdd">隐藏数据列</Button>
+          <Button type="primary" icon="ios-skip-forward" @click="countAdd">隐藏数据列</Button>
           <br>
           <br>
           <Tabs type="card" :value="currentTab" @on-click="cur">
@@ -416,6 +416,14 @@
                     });
                     axios.get(`${this.$config.url}/query/fetchtable/${vl.title}`)
                         .then(res => {
+                            if (res.data === 0) {
+                                this.$router.push({
+                                    name: 'query'
+                                });
+                                this.$config.notice("已到查询时限上限,请重新申请查询！")
+                                this.$Spin.hide();
+                                return
+                            }
                             this.wordList = concat_(this.wordList, res.data.highlight);
                             for (let i = 0; i < this.data1[0].children.length; i++) {
                                 if (this.data1[0].children[i].title === vl.title) {

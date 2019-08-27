@@ -26,7 +26,7 @@
     <p>查询结果:</p>
     <Table :columns="columnsName" :data="queryRes" highlight-row ref="table"></Table>
     <br>
-    <Page :total="total" show-total @on-change="splice_arr" ref="total"  show-sizer @on-page-size-change="ex_arr"></Page>
+    <Page :total="total" show-total @on-change="splice_arr" ref="total" show-sizer @on-page-size-change="ex_arr"></Page>
   </div>
 </template>
 
@@ -182,6 +182,8 @@
                 }))
             },
             querySQL() {
+                this.columnsName = [];
+                this.queryRes = [];
                 this.$Spin.show({
                     render: (h) => {
                         return h('div', [
@@ -212,9 +214,15 @@
                             return
                         }
                         if (res.data.data === null) {
-                            this.$config.err_notice(this, '没有查询结果!')
+                            this.$Notice.warning({
+                                title: '错误',
+                                desc: '没有查询结果!'
+                            })
                         } else if (!res.data['data']) {
-                            this.$config.err_notice(this, res.data)
+                            this.$Notice.warning({
+                                title: '错误',
+                                desc: res.data
+                            })
                         } else {
                             this.queryTime = res.data.time;
                             this.columnsName = res.data['title']

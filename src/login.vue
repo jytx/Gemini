@@ -33,7 +33,7 @@
       <div class="container">
         <div class="navbar-translate">
           <a class="navbar-brand">
-            版本号: v2.0.8
+            版本号: v2.0.9
           </a>
           <Button v-if="switchCode" type="default" ghost @click="register= true">创建用户</Button>
         </div>

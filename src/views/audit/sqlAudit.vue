@@ -98,10 +98,17 @@
                           size="small" ghost>
                     执行结果
                   </Button>
-                  <Button type="error" @click="delayKill(row)" v-if="row.Status === 3 && row.Delay !== 'none'"
-                          size="small" ghost>
-                    延时工单中止
-                  </Button>
+                  <Poptip
+                          confirm
+                          title="确定要中止该工单吗？"
+                          @on-ok="delayKill(row)"
+                          transfer>
+                    <Button type="error" v-if="row.Status === 3 && row.Delay !== 'none'"
+                            size="small" ghost>
+                      延时工单中止
+                    </Button>
+                  </Poptip>
+
                   <Button ghost size="small" class="margin-left-10" @click="timerOsc(row)"
                           v-if="row.Status === 3 && row.Type === 0" type="warning">osc进度
                   </Button>
@@ -234,8 +241,8 @@
                                     transfer: true,
                                     placement: 'bottom-start'
                                 }
-                            },[
-                                h('span',text)
+                            }, [
+                                h('span', text)
                             ])
                         }
 

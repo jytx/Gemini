@@ -167,7 +167,8 @@
                         title: '操作',
                         key: 'action',
                         align: 'center',
-                        slot: 'action'
+                        slot: 'action',
+                        width: 250
                     }
                 ],
                 page_number: 1,

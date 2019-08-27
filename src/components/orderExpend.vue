@@ -35,6 +35,11 @@
                         title: '查询语句:',
                         key: 'SQL',
                         sortable: true
+                    },
+                    {
+                        title: '查询耗时(ms):',
+                        key: 'ExTime',
+                        sortable: true
                     }
                 ],
                 TableDataNew: []
