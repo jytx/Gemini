@@ -67,8 +67,6 @@
         </template>
         <template v-else>{{i.text}}</template>
       </Card>
-      <!--      <Table :columns="snippetColumn" :data="snippetList" :show-header="false" @on-row-click="copySnippet">-->
-      <!--      </Table>-->
     </Drawer>
 
   </div>
@@ -122,9 +120,13 @@
             table: String,
             source: String
         },
+        computed: {
+            snippetList: function () {
+                return this.$store.state.snippet
+            }
+        },
         data() {
             return {
-                snippetList: this.$store.state.snippet,
                 openDrawer: false,
                 expireInfo: false,
                 page_size: 10,

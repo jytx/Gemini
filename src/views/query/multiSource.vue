@@ -62,6 +62,9 @@
         },
         methods: {
             addsnip() {
+                if (this.$store.state.snippet === null) {
+                    this.$store.state.snippet = []
+                }
                 for (let i of this.$store.state.snippet) {
                     if (i.title === this.addSnippet.title) {
                         this.$Message.error('snippet标签名不得重复!');

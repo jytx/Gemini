@@ -30,7 +30,7 @@ const store = new Vuex.Store({
         snippetTag(state, vm) {
             state.snippet.push({'title': vm.title, 'text': vm.text})
         },
-       snippetTagToJson(state) {
+        snippetTagToJson(state) {
             localStorage.setItem('snippet', JSON.stringify(state.snippet))
         },
         snippetTagFromJson(state) {
