@@ -37,8 +37,23 @@
                         sortable: true
                     },
                     {
+                        title: '查询时间:',
+                        key: 'Time',
+                        sortable: true
+                    },
+                    {
                         title: '查询耗时(ms):',
                         key: 'ExTime',
+                        sortable: true
+                    },
+                    {
+                        title: '数据源:',
+                        key: 'Source',
+                        sortable: true
+                    },
+                    {
+                        title: '数据库:',
+                        key: 'BaseName',
                         sortable: true
                     }
                 ],

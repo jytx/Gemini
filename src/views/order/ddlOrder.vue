@@ -426,7 +426,7 @@
                             })
                             .catch(err => {
                                 this.loading = false;
-                                this.$config.err_notice(err)
+                                this.$config.err_notice(this, err)
                             })
                     } else {
                         this.$Message.error('请填写具体地址或sql语句后再测试!')

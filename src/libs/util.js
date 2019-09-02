@@ -1,6 +1,7 @@
 // import env from '../../config/env';
 import Notice from 'iview/src/components/notice'
 import {appRouter} from '../router'
+import axios from 'axios'
 
 let util = {}
 util.title = function (title) {
@@ -30,23 +31,89 @@ util.mode = function (obj) {
         }
     })
     return oc
-}
+};
 
 util.err_notice = function (vm, err) {
-    let text = err
+    let text = err;
     if (err.response !== undefined) {
         if (err.response.status === 401) {
-            text = 'Token过期！请重新登录!'
-            vm.$router.replace({
-                name: 'login'
+            text = 'Token过期！请重新登录!';
+            vm.$Message.warning(text);
+            vm.$Modal.confirm({
+                title: '重新登录',
+                cancelText: '退出',
+                okText: '登录',
+                closable: true,
+                render: (h) => {
+                    return h('div', [
+                        h('br'),
+                        h('Input', {
+                            props: {
+                                value: vm.$store.state.password,
+                                type: 'password',
+                                autofocus: true,
+                                placeholder: '请输入密码'
+                            },
+                            on: {
+                                input: (val) => {
+                                    vm.$store.state.password = val;
+                                }
+                            }
+                        }),
+                        h('br'),
+                        h('br'),
+                        h('Checkbox', {
+                            props: {
+                                value: vm.$store.state.openReLogin,
+                            },
+                            style: {
+                                marginLeft: '40%'
+                            },
+                            on: {
+                                checkbox: (val) => {
+                                    vm.$store.state.openReLogin = val
+                                }
+                            }
+                        }, 'ldap登录')
+                    ])
+                },
+                onOk: () => {
+                    let url = vm.$config.auth;
+                    if (vm.$store.state.openReLogin) {
+                        url = `${vm.$config.gen}/ldap`
+                    }
+                    axios.post(url, {
+                        'username': sessionStorage.getItem('user'),
+                        'password': vm.$store.state.password
+                    })
+                        .then(res => {
+                            axios.defaults.headers.common['Authorization'] = 'Bearer ' + res.data.token;
+                            sessionStorage.setItem('jwt', `Bearer ${res.data.token}`);
+                            vm.$Message.success("已重新登录!");
+                            vm.$store.state.password = '';
+                            vm.$store.state.openReLogin = false
+                        })
+                        .catch(err => {
+                            vm.$config.auth_notice(err);
+                            vm.$router.push({
+                                name: 'login'
+                            })
+                        })
+                },
+                onCancel: () => {
+                    vm.$router.push({
+                        name: 'login'
+                    })
+                }
             })
         }
+    } else {
+        Notice.error({
+            title: '错误',
+            desc: text
+        })
     }
-    Notice.error({
-        title: '错误',
-        desc: text
-    })
-}
+};
 
 util.auth_notice = function (err) {
     let text = err
@@ -86,7 +153,7 @@ util.oneOf = function (ele, targetArr) {
     } else {
         return false
     }
-}
+};
 
 util.showThisRoute = function (itAccess, currentAccess) {
     if (typeof itAccess === 'object' && itAccess.isArray()) {
@@ -127,15 +194,14 @@ util.clearObj = function (obj) {
             obj[i] = ''
         } else if (typeof obj[i] === 'number') {
             obj[i] = 0
-        }  else if (typeof obj[i] === 'boolean') {
+        } else if (typeof obj[i] === 'boolean') {
             obj[i] = false
-        }
-        else {
+        } else {
             obj[i] = false
         }
     }
     return obj
-}
+};
 
 util.clearOption = function (obj) {
     for (let i in obj) {
@@ -150,7 +216,7 @@ util.clearOption = function (obj) {
         }
     }
     return obj
-}
+};
 
 util.clearPicker = function (obj) {
     for (let i in obj) {

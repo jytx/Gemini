@@ -182,9 +182,9 @@
                 }
             };
             const regExp_password = (rule, value, callback) => {
-                let pPattern = /^.*(?=.{6,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*? ]).*$/;
+                let pPattern = /^.*(?=.{6,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z]).*$/;
                 if (!pPattern.test(this.userinfo.password)) {
-                    callback(new Error('至少1个大写字母,1个小写字母,1个数字,1个特殊字符(!@#$%^&*?其中之一)'))
+                    callback(new Error('至少1个大写字母,1个小写字母,1个数字'))
                 } else {
                     callback()
                 }

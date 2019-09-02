@@ -1,19 +1,19 @@
 <style lang="less" scoped>
-@import "styles/main.less";
+  @import "styles/main.less";
 </style>
 <template>
   <div id="main" class="main" :class="{'main-hide-text': hideMenuText}">
     <div
-      class="sidebar-menu-con"
-      style="width:200px; background:#ffffff"
+            class="sidebar-menu-con"
+            style="width:200px; background:#ffffff"
     >
       <sidebar-menu :menuList="menuList" :iconSize="18"/>
     </div>
     <div class="main-header-con" :style="{paddingLeft: hideMenuText?'60px':'200px'}">
       <div class="main-header">
-          <div class="main-breadcrumb">
-            <breadcrumb-nav :currentPath="currentPath"></breadcrumb-nav>
-          </div>
+        <div class="main-breadcrumb">
+          <breadcrumb-nav :currentPath="currentPath"></breadcrumb-nav>
+        </div>
         <div class="header-avator-con">
           <a href="https://guide.yearning.io/" target="_Blank">使用说明</a>
           <div @click="handleFullScreen" v-if="showFullScreenBtn" class="full-screen-btn-con">
@@ -53,14 +53,14 @@
       </div>
     </div>
     <Modal
-      v-model="stmt"
-      title="欢迎使用Yearning SQL审核平台"
-      width="600"
-      :mask-closable="false"
-      :closable="false"
-      :styles="{top: '20%'}"
-      ok-text="同意"
-      @on-ok="statementput"
+            v-model="stmt"
+            title="欢迎使用Yearning SQL审核平台"
+            width="600"
+            :mask-closable="false"
+            :closable="false"
+            :styles="{top: '20%'}"
+            ok-text="同意"
+            @on-ok="statementput"
     >
       <h3>关于Yearning:</h3>
       <br>
@@ -89,214 +89,223 @@
   </div>
 </template>
 <script>
-import sidebarMenu from './components/sidebarMenu.vue'
-import breadcrumbNav from './components/breadcrumbNav.vue'
-import axios from 'axios'
-import { mapState } from 'vuex'
+    import sidebarMenu from './components/sidebarMenu.vue'
+    import breadcrumbNav from './components/breadcrumbNav.vue'
+    import axios from 'axios'
+    import {mapState} from 'vuex'
 
-export default {
-  components: {
-    sidebarMenu,
-    breadcrumbNav
-  },
-  data () {
-    return {
-      spanLeft: 4,
-      spanRight: 20,
-      currentPageName: '',
-      hideMenuText: false,
-      userName: sessionStorage.getItem('user'),
-      showFullScreenBtn: window.navigator.userAgent.indexOf('MSIE') < 0,
-      isFullScreen: false,
-      lockScreenSize: 0,
-      colorList: ['#f56a00', '#7265e6', '#ffbf00', '#00a2ae'],
-      color: ''
-    }
-  },
-  computed: {
-    ...mapState([
-      'pageOpenedList',
-      'currentPath',
-      'menuList'
-    ]),
-    stmt: {
-      get () {
-        return this.$store.state.stmt
-      },
-      set (val) {
-        this.$store.state.stmt = val
-      }
-    }
-  },
-  methods: {
-    // 个人中心
-    handleClickUserDropdown () {
-      localStorage.clear()
-      sessionStorage.clear()
-      this.$router.push({
-        name: 'login'
-      })
-    },
-    handleChange () {
-      let i = this.$config.random(0, 3);
-      this.color = this.colorList[i]
-    },
-    // 全屏
-    handleFullScreen () {
-      let main = document.getElementById('main')
-      if (this.isFullScreen) {
-        if (document.exitFullscreen) {
-          document.exitFullscreen()
-        } else if (document.mozCancelFullScreen) {
-          document.mozCancelFullScreen()
-        } else if (document.webkitCancelFullScreen) {
-          document.webkitCancelFullScreen()
-        } else if (document.msExitFullscreen) {
-          document.msExitFullscreen()
+    export default {
+        components: {
+            sidebarMenu,
+            breadcrumbNav
+        },
+        data() {
+            return {
+                spanLeft: 4,
+                spanRight: 20,
+                currentPageName: '',
+                hideMenuText: false,
+                userName: sessionStorage.getItem('user'),
+                showFullScreenBtn: window.navigator.userAgent.indexOf('MSIE') < 0,
+                isFullScreen: false,
+                lockScreenSize: 0,
+                colorList: ['#f56a00', '#7265e6', '#ffbf00', '#00a2ae'],
+                color: ''
+            }
+        },
+        computed: {
+            ...mapState([
+                'pageOpenedList',
+                'currentPath',
+                'menuList'
+            ]),
+            stmt: {
+                get() {
+                    return this.$store.state.stmt
+                },
+                set(val) {
+                    this.$store.state.stmt = val
+                }
+            }
+        },
+        methods: {
+            // 个人中心
+            handleClickUserDropdown() {
+                localStorage.clear()
+                sessionStorage.clear()
+                this.$router.push({
+                    name: 'login'
+                })
+            },
+            handleChange() {
+                let i = this.$config.random(0, 3);
+                this.color = this.colorList[i]
+            },
+            // 全屏
+            handleFullScreen() {
+                let main = document.getElementById('main')
+                if (this.isFullScreen) {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen()
+                    } else if (document.mozCancelFullScreen) {
+                        document.mozCancelFullScreen()
+                    } else if (document.webkitCancelFullScreen) {
+                        document.webkitCancelFullScreen()
+                    } else if (document.msExitFullscreen) {
+                        document.msExitFullscreen()
+                    }
+                } else {
+                    if (main.requestFullscreen) {
+                        main.requestFullscreen()
+                    } else if (main.mozRequestFullScreen) {
+                        main.mozRequestFullScreen()
+                    } else if (main.webkitRequestFullScreen) {
+                        main.webkitRequestFullScreen()
+                    } else if (main.msRequestFullscreen) {
+                        main.msRequestFullscreen()
+                    }
+                }
+            },
+            // 锁屏
+            lockScreen() {
+                let lockScreenBack = document.getElementById('lock_screen_back')
+                lockScreenBack.style.transition = 'all 3s'
+                lockScreenBack.style.zIndex = 10000
+                lockScreenBack.style.boxShadow = '0 0 0 ' + this.lockScreenSize + 'px #667aa6 inset'
+                this.$store.commit('lock')
+                sessionStorage.setItem('last_page_name', this.$route.name) // 本地存储锁屏之前打开的页面以便解锁后打开
+                setTimeout(() => {
+                    lockScreenBack.style.transition = 'all 0s'
+                    this.$router.push({
+                        name: 'locking'
+                    })
+                }, 800)
+            },
+            init() {
+                // 全屏相关
+                document.addEventListener('fullscreenchange', () => {
+                    this.isFullScreen = !this.isFullScreen
+                })
+                document.addEventListener('mozfullscreenchange', () => {
+                    this.isFullScreen = !this.isFullScreen
+                })
+                document.addEventListener('webkitfullscreenchange', () => {
+                    this.isFullScreen = !this.isFullScreen
+                })
+                document.addEventListener('msfullscreenchange', () => {
+                    this.isFullScreen = !this.isFullScreen
+                })
+                // 锁屏相关
+                let lockScreenBack = document.getElementById('lock_screen_back')
+                let x = document.body.clientWidth
+                let y = document.body.clientHeight
+                let r = Math.sqrt(x * x + y * y)
+                let size = parseInt(r)
+                this.lockScreenSize = size
+                window.addEventListener('resize', () => {
+                    let x = document.body.clientWidth
+                    let y = document.body.clientHeight
+                    let r = Math.sqrt(x * x + y * y)
+                    let size = parseInt(r)
+                    this.lockScreenSize = size
+                    lockScreenBack.style.transition = 'all 0s'
+                    lockScreenBack.style.width = lockScreenBack.style.height = size + 'px'
+                })
+                lockScreenBack.style.width = lockScreenBack.style.height = size + 'px'
+                // 问候信息相关
+                if (!sessionStorage.getItem('hasGreet')) {
+                    let now = new Date()
+                    let hour = now.getHours()
+                    let greetingWord = {
+                        title: '',
+                        words: ''
+                    }
+                    let userName = this.userName;
+                    if (hour < 6) {
+                        greetingWord = {
+                            title: '凌晨好~' + userName,
+                            words: '早起的鸟儿有虫吃~'
+                        }
+                    } else if (hour >= 6 && hour < 9) {
+                        greetingWord = {
+                            title: '早上好~' + userName,
+                            words: '来一杯咖啡开启美好的一天~'
+                        }
+                    } else if (hour >= 9 && hour < 12) {
+                        greetingWord = {
+                            title: '上午好~' + userName,
+                            words: '工作要加油哦~'
+                        }
+                    } else if (hour >= 12 && hour < 14) {
+                        greetingWord = {
+                            title: '中午好~' + userName,
+                            words: '午饭要吃饱~'
+                        }
+                    } else if (hour >= 14 && hour < 17) {
+                        greetingWord = {
+                            title: '下午好~' + userName,
+                            words: '下午也要活力满满哦~'
+                        }
+                    } else if (hour >= 17 && hour < 19) {
+                        greetingWord = {
+                            title: '傍晚好~' + userName,
+                            words: '下班没事问候下爸妈吧~'
+                        }
+                    } else if (hour >= 19 && hour < 21) {
+                        greetingWord = {
+                            title: '晚上好~' + userName,
+                            words: '工作之余品一品书香吧~'
+                        }
+                    } else {
+                        greetingWord = {
+                            title: '深夜好~' + userName,
+                            words: '夜深了，注意休息哦~'
+                        }
+                    }
+                    this.$Notice.config({
+                        top: 130
+                    })
+                    this.$Notice.info({
+                        title: greetingWord.title,
+                        desc: greetingWord.words,
+                        duration: 4,
+                        name: 'greeting'
+                    })
+                    sessionStorage.setItem('hasGreet', 1)
+                }
+            },
+            statementput() {
+                axios.put(`${this.$config.url}/dash/stmt`)
+            },
+            beforeunloadFn() {
+                this.$store.commit('snippetTagToJson')
+            }
+        },
+        mounted() {
+            this.handleChange();
+            this.$store.commit('Breadcrumbset', this.$route.matched[1].name)
+            this.$store.state.currentPageName = this.$route.matched[1].name
+            if (localStorage.getItem('pageOpenedList')) {
+                this.$store.state.pageOpenedList = JSON.parse(localStorage.getItem('pageOpenedList'))
+            } else {
+                this.$store.state.pageOpenedList = [{
+                    title: '首页',
+                    path: '',
+                    name: 'home_index'
+                }]
+            }
+            this.init();
+        },
+        created() {
+            // 权限菜单过滤相关
+            this.$store.commit('Menulist');
+            this.$store.commit('snippetTagFromJson');
+            axios.defaults.headers.common['Authorization'] = sessionStorage.getItem('jwt')
+            window.addEventListener('beforeunload', e => this.beforeunloadFn(e))
+        },
+        destroyed() {
+            window.removeEventListener('beforeunload', e => this.beforeunloadFn(e))
         }
-      } else {
-        if (main.requestFullscreen) {
-          main.requestFullscreen()
-        } else if (main.mozRequestFullScreen) {
-          main.mozRequestFullScreen()
-        } else if (main.webkitRequestFullScreen) {
-          main.webkitRequestFullScreen()
-        } else if (main.msRequestFullscreen) {
-          main.msRequestFullscreen()
-        }
-      }
-    },
-    // 锁屏
-    lockScreen () {
-      let lockScreenBack = document.getElementById('lock_screen_back')
-      lockScreenBack.style.transition = 'all 3s'
-      lockScreenBack.style.zIndex = 10000
-      lockScreenBack.style.boxShadow = '0 0 0 ' + this.lockScreenSize + 'px #667aa6 inset'
-      this.$store.commit('lock')
-      sessionStorage.setItem('last_page_name', this.$route.name) // 本地存储锁屏之前打开的页面以便解锁后打开
-      setTimeout(() => {
-        lockScreenBack.style.transition = 'all 0s'
-        this.$router.push({
-          name: 'locking'
-        })
-      }, 800)
-    },
-    init () {
-      // 全屏相关
-      document.addEventListener('fullscreenchange', () => {
-        this.isFullScreen = !this.isFullScreen
-      })
-      document.addEventListener('mozfullscreenchange', () => {
-        this.isFullScreen = !this.isFullScreen
-      })
-      document.addEventListener('webkitfullscreenchange', () => {
-        this.isFullScreen = !this.isFullScreen
-      })
-      document.addEventListener('msfullscreenchange', () => {
-        this.isFullScreen = !this.isFullScreen
-      })
-      // 锁屏相关
-      let lockScreenBack = document.getElementById('lock_screen_back')
-      let x = document.body.clientWidth
-      let y = document.body.clientHeight
-      let r = Math.sqrt(x * x + y * y)
-      let size = parseInt(r)
-      this.lockScreenSize = size
-      window.addEventListener('resize', () => {
-        let x = document.body.clientWidth
-        let y = document.body.clientHeight
-        let r = Math.sqrt(x * x + y * y)
-        let size = parseInt(r)
-        this.lockScreenSize = size
-        lockScreenBack.style.transition = 'all 0s'
-        lockScreenBack.style.width = lockScreenBack.style.height = size + 'px'
-      })
-      lockScreenBack.style.width = lockScreenBack.style.height = size + 'px'
-      // 问候信息相关
-      if (!sessionStorage.getItem('hasGreet')) {
-        let now = new Date()
-        let hour = now.getHours()
-        let greetingWord = {
-          title: '',
-          words: ''
-        }
-        let userName = this.userName;
-        if (hour < 6) {
-          greetingWord = {
-            title: '凌晨好~' + userName,
-            words: '早起的鸟儿有虫吃~'
-          }
-        } else if (hour >= 6 && hour < 9) {
-          greetingWord = {
-            title: '早上好~' + userName,
-            words: '来一杯咖啡开启美好的一天~'
-          }
-        } else if (hour >= 9 && hour < 12) {
-          greetingWord = {
-            title: '上午好~' + userName,
-            words: '工作要加油哦~'
-          }
-        } else if (hour >= 12 && hour < 14) {
-          greetingWord = {
-            title: '中午好~' + userName,
-            words: '午饭要吃饱~'
-          }
-        } else if (hour >= 14 && hour < 17) {
-          greetingWord = {
-            title: '下午好~' + userName,
-            words: '下午也要活力满满哦~'
-          }
-        } else if (hour >= 17 && hour < 19) {
-          greetingWord = {
-            title: '傍晚好~' + userName,
-            words: '下班没事问候下爸妈吧~'
-          }
-        } else if (hour >= 19 && hour < 21) {
-          greetingWord = {
-            title: '晚上好~' + userName,
-            words: '工作之余品一品书香吧~'
-          }
-        } else {
-          greetingWord = {
-            title: '深夜好~' + userName,
-            words: '夜深了，注意休息哦~'
-          }
-        }
-        this.$Notice.config({
-          top: 130
-        })
-        this.$Notice.info({
-          title: greetingWord.title,
-          desc: greetingWord.words,
-          duration: 4,
-          name: 'greeting'
-        })
-        sessionStorage.setItem('hasGreet', 1)
-      }
-    },
-    statementput () {
-      axios.put(`${this.$config.url}/dash/stmt`)
+
     }
-  },
-  mounted () {
-    this.handleChange();
-    this.$store.commit('Breadcrumbset', this.$route.matched[1].name)
-    this.$store.state.currentPageName = this.$route.matched[1].name
-    if (localStorage.getItem('pageOpenedList')) {
-      this.$store.state.pageOpenedList = JSON.parse(localStorage.getItem('pageOpenedList'))
-    } else {
-      this.$store.state.pageOpenedList = [{
-        title: '首页',
-        path: '',
-        name: 'home_index'
-      }]
-    }
-    this.init();
-  },
-  created () {
-    // 权限菜单过滤相关
-    this.$store.commit('Menulist')
-    axios.defaults.headers.common['Authorization'] = sessionStorage.getItem('jwt')
-  }
-}
 </script>

@@ -17,7 +17,7 @@
   <div>
     <Row>
       <Col :span="5" v-if="showTableinfo">
-        <Card>
+        <Card dis-hover>
           <p slot="title">
             <Icon type="ios-redo"></Icon>
             选择数据库
@@ -41,18 +41,14 @@
         </Card>
       </Col>
       <Col :span="slider2" class="padding-left-10">
-        <Card>
-          <p slot="title">
-            <Icon type="ios-crop-strong"></Icon>
-            填写sql语句
-          </p>
+        <Card dis-hover>
           <Button type="primary" icon="ios-skip-forward" @click="countAdd">隐藏数据列</Button>
           <br>
           <br>
-          <Tabs type="card" :value="currentTab" @on-click="cur">
+          <Tabs type="card" :value="currentTab" @on-click="cur" name="base">
             <TabPane v-for="tab in tabs" :key="tab" :label="'查询' + tab" :name="'查询' + tab"
-                     icon="logo-buffer">
-              <tabQuery :word-list="wordList" :export_data="export_data" :dataBase="put_info.base"
+                     icon="logo-buffer" tab="base">
+              <tabQuery :word-list="wordList" :export_data="export_data" :dataBase="put_info.base" :source="source"
                         :table="tableInfoName"></tabQuery>
             </TabPane>
             <Button @click="handleTabsAdd" size="small" slot="extra">增加窗口</Button>
@@ -162,6 +158,9 @@
             tabQuery
         },
         name: 'SearchSQL',
+        props: {
+          source: String
+        },
         data() {
             return {
                 slider2: 19,
@@ -414,13 +413,13 @@
                             ])
                         }
                     });
-                    axios.get(`${this.$config.url}/query/fetchtable/${vl.title}`)
+                    axios.get(`${this.$config.url}/query/fetchtable/${vl.title}/${this.source}`)
                         .then(res => {
                             if (res.data === 0) {
+                                this.$config.notice("已到查询时限上限,请重新申请查询！");
                                 this.$router.push({
                                     name: 'query'
                                 });
-                                this.$config.notice("已到查询时限上限,请重新申请查询！")
                                 this.$Spin.hide();
                                 return
                             }
@@ -454,27 +453,18 @@
             }
         },
         mounted() {
-            axios.put(`${this.$config.url}/query/status`)
+            axios.get(`${this.$config.url}/query/fetchbase?source=${this.source}`)
                 .then(res => {
-                    if (res.data.status !== 1) {
-                        this.$router.push({
-                            name: 'query'
-                        })
-                    } else {
-                        axios.get(`${this.$config.url}/query/fetchbase`)
-                            .then(res => {
-                                this.fetchData.assigned = res.data.sign;
-                                this.data1 = res.data.info;
-                                let tWord = this.$config.highlight.split('|');
-                                for (let i of tWord) {
-                                    this.wordList.push({'vl': i, 'meta': '关键字'})
-                                }
-                                this.wordList = this.wordList.concat(res.data.highlight);
-                                res.data['status'] === 1 ? this.export_data = true : this.export_data = false
-                            })
+                    this.fetchData.assigned = res.data.sign;
+                    this.data1 = res.data.info;
+                    let tWord = this.$config.highlight.split('|');
+                    for (let i of tWord) {
+                        this.wordList.push({'vl': i, 'meta': '关键字'})
                     }
+                    this.wordList = this.wordList.concat(res.data.highlight);
+                    res.data['status'] === 1 ? this.export_data = true : this.export_data = false
                 })
-                .catch(err => this.$config.err_notice(this, err))
+                .catch(err => this.$config.err_notice(this,err.response.data))
         }
     }
 </script>

@@ -21,7 +21,7 @@ const mainchild = [{
     title: '查询',
     name: 'querypage',
     component: resolve => {
-      require(['./views/query/querySql.vue'], resolve)
+      require(['./views/query/multiSource.vue'], resolve)
     }
   },
   {

@@ -32,18 +32,6 @@
                 </Select>
               </FormItem>
 
-              <FormItem label="连接名:" prop="source">
-                <Select v-model="formItem.source">
-                  <Option
-                    v-for="i in fetchData.source"
-                    :value="i"
-                    :key="i"
-                  >{{ i }}
-                  </Option>
-                </Select>
-              </FormItem>
-
-
               <FormItem label="审核人:" prop="assigned">
                 <Select v-model="formItem.assigned" filterable>
                   <Option v-for="i in fetchData.assigned" :value="i" :key="i">{{i}}</Option>
@@ -76,141 +64,136 @@
 </template>
 
 <script>
-  //
-  import axios from 'axios'
+    //
+    import axios from 'axios'
 
-  export default {
-    name: 'work_flow',
-    props: ['msg'],
-    data () {
-      return {
-        export: false,
-        stepData: {
-          title: 'Yearning SQL查询系统',
-          describe: `欢迎你！ ${sessionStorage.getItem('user')}`
-        },
-        stepList1: [
-          {
-            title: '提交',
-            describe: '提交查询申请'
-          },
-          {
-            title: '审核',
-            describe: '等待审核结果'
-          },
-          {
-            title: '查询',
-            describe: '审核完毕，进入查询页面'
-          }
-        ],
-        stepRules: {
-          text: [
-            {required: true, message: '请填写查询说明', trigger: 'blur'}
-          ],
-          idc: [{
-            required: true,
-            message: '环境地址不得为空',
-            trigger: 'change'
-          }],
-          source: [{
-            required: true,
-            message: '连接名不得为空',
-            trigger: 'change'
-          }],
-          assigned: [{
-            required: true,
-            message: '审核人不得为空',
-            trigger: 'change'
-          }]
-        },
-        item: {},
-        formItem: {
-          text: '',
-          idc: '',
-          source: '',
-          export: 0,
-          assigned: ''
-        },
-        fetchData: {
-          idc: [],
-          source: [],
-          base: [],
-          table: [],
-          assigned: []
-        }
-      }
-    },
-    methods: {
-      fetchIDC () {
-        axios.get(`${this.$config.url}/fetch/idc`)
-          .then(res => {
-            this.fetchData.idc = res.data;
-          })
-          .catch(error => {
-            this.$config.err_notice(this, error)
-          })
-      },
-      fetchSource (idc) {
-        if (idc) {
-          axios.get(`${this.$config.url}/fetch/source/${idc}/query`)
-            .then(res => {
-              if (res.data.x === 'query') {
-                this.fetchData.source = res.data.source;
-                this.fetchData.assigned = res.data.assigned
-              } else {
-                this.$config.notice('非法劫持参数！')
-              }
-            })
-            .catch(error => {
-              this.$config.err_notice(this, error)
-            })
-        }
-      },
-      handleSubmit () {
-        this.$refs['formItem'].validate((valid) => {
-          if (valid) {
-            axios.post(`${this.$config.url}/query/refer`, {
-              'idc': this.formItem.idc,
-              'source': this.formItem.source,
-              'export': this.formItem.export,
-              'assigned': this.formItem.assigned,
-              'text': this.formItem.text
-            })
-              .then(() => {
-                this.$router.push({
-                  name: 'queryready'
-                })
-              })
-              .catch(err => {
-                this.$config.err_notice(this, err)
-              })
-          }
-        })
-      },
-      fetchQueryStatus () {
-        axios.put(`${this.$config.url}/query/status`)
-          .then(res => {
-            if (res.data.status === 1) {
-              this.$router.push({
-                name: 'querypage'
-              })
-            } else if (res.data.status === 2) {
-              this.$router.push({
-                name: 'queryready'
-              })
-            } else {
-              this.fetchIDC();
-              if (res.data.export) {
-                this.export = true
-              }
+    export default {
+        name: 'work_flow',
+        props: ['msg'],
+        data() {
+            return {
+                export: false,
+                stepData: {
+                    title: 'Yearning SQL查询系统',
+                    describe: `欢迎你！ ${sessionStorage.getItem('user')}`
+                },
+                stepList1: [
+                    {
+                        title: '提交',
+                        describe: '提交查询申请'
+                    },
+                    {
+                        title: '审核',
+                        describe: '等待审核结果'
+                    },
+                    {
+                        title: '查询',
+                        describe: '审核完毕，进入查询页面'
+                    }
+                ],
+                stepRules: {
+                    text: [
+                        {required: true, message: '请填写查询说明', trigger: 'blur'}
+                    ],
+                    idc: [{
+                        required: true,
+                        message: '环境地址不得为空',
+                        trigger: 'change'
+                    }],
+                    source: [{
+                        required: true,
+                        message: '连接名不得为空',
+                        trigger: 'change'
+                    }],
+                    assigned: [{
+                        required: true,
+                        message: '审核人不得为空',
+                        trigger: 'change'
+                    }]
+                },
+                item: {},
+                formItem: {
+                    text: '',
+                    idc: '',
+                    export: 0,
+                    assigned: ''
+                },
+                fetchData: {
+                    idc: [],
+                    assigned: []
+                }
             }
-          })
-      }
-    },
-    mounted () {
-      this.fetchQueryStatus();
+        },
+        methods: {
+            fetchIDC() {
+                axios.get(`${this.$config.url}/fetch/idc`)
+                    .then(res => {
+                        this.fetchData.idc = res.data;
+                    })
+                    .catch(error => {
+                        this.$config.err_notice(this, error)
+                    })
+            },
+            fetchSource(idc) {
+                if (idc) {
+                    axios.get(`${this.$config.url}/fetch/source/${idc}/query`)
+                        .then(res => {
+                            if (res.data.x === 'query') {
+                                this.fetchData.assigned = res.data.assigned
+                            } else {
+                                this.$config.notice('非法劫持参数！')
+                            }
+                        })
+                        .catch(error => {
+                            this.$config.err_notice(this, error)
+                        })
+                }
+            },
+            handleSubmit() {
+                this.$refs['formItem'].validate((valid) => {
+                    if (valid) {
+                        axios.post(`${this.$config.url}/query/refer`, {
+                            'idc': this.formItem.idc,
+                            'source': this.formItem.source,
+                            'export': this.formItem.export,
+                            'assigned': this.formItem.assigned,
+                            'text': this.formItem.text
+                        })
+                            .then(() => {
+                                this.$router.push({
+                                    name: 'queryready'
+                                })
+                            })
+                            .catch(err => {
+                                this.$config.err_notice(this, err)
+                            })
+                    }
+                })
+            },
+            fetchQueryStatus() {
+                axios.put(`${this.$config.url}/query/status`)
+                    .then(res => {
+                        if (res.data.status === 1) {
+                            this.$router.push({
+                                name: 'querypage'
+                            })
+                        } else if (res.data.status === 2) {
+                            this.$router.push({
+                                name: 'queryready'
+                            })
+                        } else {
+                            this.fetchIDC();
+                            if (res.data.export) {
+                                this.export = true
+                            }
+                        }
+                    })
+            }
+        },
+        mounted() {
+            this.fetchQueryStatus();
+        }
     }
-  }
 </script>
 
 <style lang="less">

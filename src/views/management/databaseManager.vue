@@ -32,10 +32,11 @@
             <Form-item label="密码:" prop="password">
               <Input v-model="formItem.password" placeholder="请输入" type="password"></Input>
             </Form-item>
-            <Form-item label="查询数据源:">
+            <Form-item label="数据源类型:">
               <RadioGroup v-model="formItem.isquery">
-                <Radio :label="1">是</Radio>
-                <Radio :label="0">否</Radio>
+                <Radio :label="2">读写</Radio>
+                <Radio :label="1">读</Radio>
+                <Radio :label="0">写</Radio>
               </RadioGroup>
             </Form-item>
             <Button type="info" @click="testConnection()">测试连接</Button>
@@ -55,17 +56,14 @@
         <Select v-model="query.computer_room"  placeholder="请填写环境" style="width: 15%" class="margin-left-10">
           <Option v-for="list in comList" :value="list" :key="list" >{{ list }}</Option>
         </Select>
-        <Select v-model="query.isQuery" style="width: 15%" class="margin-left-10"  placeholder="是否为查询数据源">
-          <Option :value="1" label="是"></Option>
-          <Option :value="0" label="否"></Option>
-        </Select>
         <Button @click="queryData" type="primary" class="margin-left-10">查询</Button>
         <Button @click="queryCancel" type="warning" class="margin-left-10">重置</Button>
         <div class="edittable-con-1">
           <Table :columns="columns" :data="tableData">
             <template slot-scope="{ row }" slot="is_query">
-              <Tag checkable color="primary" v-if="row.IsQuery === '否'">{{row.IsQuery}}</Tag>
-              <Tag checkable color="success" v-if="row.IsQuery === '是'">{{row.IsQuery}}</Tag>
+              <Tag checkable color="primary" v-if="row.IsQuery === 0">写</Tag>
+              <Tag checkable color="success" v-if="row.IsQuery === 1">读</Tag>
+              <Tag checkable color="warning" v-if="row.IsQuery === 2">读写</Tag>
             </template>
             <template slot-scope="{ row }" slot="action">
               <Button type="info" size="small" @click="viewConnectionModal(row)" style="margin-right: 5px">详细信息</Button>
@@ -147,7 +145,7 @@
                 ],
                 // 添加数据库信息
                 formItem: {
-                    isquery: 0,
+                    isquery: 2,
                     name: '',
                     ip: '',
                     add: '',
@@ -193,7 +191,6 @@
                 query: {
                     computer_room: '',
                     connection_name: '',
-                    isQuery: 2,
                     valve: false
                 }
             }
@@ -264,9 +261,6 @@
                         this.tableData = res.data.data;
                         this.pagenumber = parseInt(res.data.page);
                         this.comList = res.data.custom;
-                        this.tableData.forEach((item) => {
-                            (item.IsQuery === 1) ? item.IsQuery = '是' : item.IsQuery = '否'
-                        })
                     })
                     .catch(error => {
                         this.$config.err_notice(this, error)
@@ -288,7 +282,6 @@
             },
             queryCancel() {
                 this.$config.clearObj(this.query);
-                this.query.isQuery = 2;
                 this.getPageInfo()
             }
         },

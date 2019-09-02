@@ -21,12 +21,56 @@
     >导出查询数据
     </Button>
     <Button type="warning" @click="beauty" class="margin-left-10">美化</Button>
+    <Button type="primary" icon="md-copy" @click="openSnippet" class="margin-left-10">snippet</Button>
     <br>
     <br>
     <p>查询结果:</p>
     <Table :columns="columnsName" :data="queryRes" highlight-row ref="table"></Table>
     <br>
     <Page :total="total" show-total @on-change="splice_arr" ref="total" show-sizer @on-page-size-change="ex_arr"></Page>
+
+    <Modal
+            v-model="expireInfo"
+            title="查询时限过期提醒"
+            @on-ok="togo">
+      <span>查询时限已过期,请重新申请查询时限。</span>
+      <br>
+      <span>点击确定,返回查询申请页面。</span>
+    </Modal>
+
+    <Drawer title="snippet" v-model="openDrawer" transfer>
+      <Card style="height:150px" v-for="i in snippetList" :key="i.title" dis-hover>
+        <p slot="title">
+          <Icon type="md-copy"></Icon>
+          {{i.title}}
+        </p>
+        <a href="#" slot="extra" @click.prevent="copySnippet(i)">
+          <Icon type="ios-loop-strong"></Icon>
+          复制
+        </a>
+        <template slot="extra">
+          <Poptip
+                  confirm
+                  title="确定要删除这条Snippet?"
+                  @on-ok="delSnippet(i)">
+            <a href="#">
+              <Icon type="ios-loop-strong"></Icon>
+              删除
+            </a>
+          </Poptip>
+        </template>
+
+        <template v-if="i.text.length > 59">
+          <Tooltip max-width="200" :content="i.text">
+            {{i.text.substring(0,60)}}.....
+          </Tooltip>
+        </template>
+        <template v-else>{{i.text}}</template>
+      </Card>
+      <!--      <Table :columns="snippetColumn" :data="snippetList" :show-header="false" @on-row-click="copySnippet">-->
+      <!--      </Table>-->
+    </Drawer>
+
   </div>
 </template>
 
@@ -75,10 +119,14 @@
             wordList: Array,
             export_data: Boolean,
             dataBase: String,
-            table: String
+            table: String,
+            source: String
         },
         data() {
             return {
+                snippetList: this.$store.state.snippet,
+                openDrawer: false,
+                expireInfo: false,
                 page_size: 10,
                 columnsName: [],
                 queryRes: [],
@@ -122,6 +170,15 @@
             }
         },
         methods: {
+            delSnippet(vl) {
+                this.$store.commit('snippetRemoveTag', vl)
+            },
+            copySnippet(vl) {
+                this.formItem.textarea = vl.text
+            },
+            openSnippet() {
+                this.openDrawer = true
+            },
             beauty() {
                 axios.put(`${this.$config.url}/query/beauty`, {
                     'sql': this.formItem.textarea
@@ -136,7 +193,7 @@
                     this.$Message.error("请选中对应库/表");
                     return
                 }
-                axios.get(`${this.$config.url}/query/tableinfo/${this.dataBase}/${this.table}`)
+                axios.get(`${this.$config.url}/query/tableinfo/${this.dataBase}/${this.table}/${this.source}`)
                     .then(res => {
                         this.columnsName = this.fieldColumns;
                         this.queryRes = res.data
@@ -181,6 +238,11 @@
                     }
                 }))
             },
+            togo() {
+                this.$router.push({
+                    name: 'query'
+                });
+            },
             querySQL() {
                 this.columnsName = [];
                 this.queryRes = [];
@@ -202,14 +264,12 @@
                 });
                 axios.post(`${this.$config.url}/query`, {
                     'sql': this.formItem.textarea,
-                    'basename': this.dataBase
+                    'basename': this.dataBase,
+                    'source': this.source
                 })
                     .then(res => {
                         if (res.data.status) {
-                            this.$router.push({
-                                name: 'query'
-                            });
-                            this.$config.notice("已到查询时限上限,请重新申请查询！")
+                            this.expireInfo = true;
                             this.$Spin.hide();
                             return
                         }
