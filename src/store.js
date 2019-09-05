@@ -8,6 +8,7 @@ import util from './libs/util'
 Vue.use(Vuex);
 const store = new Vuex.Store({
     state: {
+        hideMenuText: false,
         stmt: false,
         password: '',
         openReLogin: false,
@@ -27,6 +28,9 @@ const store = new Vuex.Store({
         snippet: []
     },
     mutations: {
+        closeNav(state) {
+            return state.hideMenuText =  !state.hideMenuText
+        },
         snippetTag(state, vm) {
             state.snippet.push({'title': vm.title, 'text': vm.text})
         },

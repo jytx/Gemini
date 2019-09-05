@@ -23,6 +23,7 @@
         <Cell v-for="i in fetchData.source" :title="i" :name="i" :key="i"/>
       </CellGroup>
       <div slot="footer">
+        <Button type="success" @click="deferReply">返回</Button>
       </div>
     </Modal>
     <Modal v-model="openSnippet" title="新建Snippet" @on-ok="addsnip">
@@ -61,6 +62,14 @@
             }
         },
         methods: {
+            deferReply() {
+                axios.delete(`${this.$config.url}/query/undo`)
+                    .then(res => this.$config.notice(res.data))
+                    .catch(err => this.$config.err_notice(this, err));
+                this.$router.push({
+                    name: 'query'
+                })
+            },
             addsnip() {
                 if (this.$store.state.snippet === null) {
                     this.$store.state.snippet = []

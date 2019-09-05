@@ -217,7 +217,7 @@
 </template>
 <script>
     import axios from 'axios'
-
+    import expandRow from '../../components/expandTable.vue';
     export default {
         name: 'Sqltable',
         data() {
@@ -230,20 +230,22 @@
                 loading: false,
                 sql_columns: [
                     {
+                        type: 'expand',
+                        width: 50,
+                        render: (h, params) => {
+                            return h(expandRow, {
+                                props: {
+                                    row: params.row
+                                }
+                            })
+                        }
+                    },
+                    {
                         title: '当前检查的sql',
                         key: 'SQL',
                         render: (h, params) => {
                             let text = params.row.SQL.substring(0, 40) + '...';
-                            return h('Tooltip', {
-                                props: {
-                                    maxWidth: '300',
-                                    content: params.row.SQL,
-                                    transfer: true,
-                                    placement: 'bottom-start'
-                                }
-                            }, [
-                                h('span', text)
-                            ])
+                            return  h('span', text)
                         }
 
                     },

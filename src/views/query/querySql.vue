@@ -159,7 +159,7 @@
         },
         name: 'SearchSQL',
         props: {
-          source: String
+            source: String
         },
         data() {
             return {
@@ -256,11 +256,12 @@
             countAdd() {
                 if (this.showTableinfo) {
                     this.showTableinfo = false;
-                    this.slider2 = 24
+                    this.slider2 = 24;
                 } else {
                     this.showTableinfo = true;
                     this.slider2 = 19
                 }
+                this.$store.commit('closeNav')
             },
             beauty() {
                 axios.put(`${this.$config.url}/query/beauty`, {
@@ -453,7 +454,9 @@
             }
         },
         mounted() {
-            axios.get(`${this.$config.url}/query/fetchbase?source=${this.source}`)
+            axios.put(`${this.$config.url}/query/fetchbase`, {
+                'source': this.source
+            })
                 .then(res => {
                     this.fetchData.assigned = res.data.sign;
                     this.data1 = res.data.info;
@@ -464,7 +467,7 @@
                     this.wordList = this.wordList.concat(res.data.highlight);
                     res.data['status'] === 1 ? this.export_data = true : this.export_data = false
                 })
-                .catch(err => this.$config.err_notice(this,err.response.data))
+                .catch(err => this.$config.err_notice(this, err.response.data))
         }
     }
 </script>

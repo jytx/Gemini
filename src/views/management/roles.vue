@@ -165,8 +165,11 @@
                           <FormItem label="表名最大长度">
                             <InputNumber :min="0" v-model="juno.MaxTableNameLen"></InputNumber>
                           </FormItem>
-                          <FormItem label="最大影响行数">
+                          <FormItem label="DML最大影响行数">
                             <InputNumber :min="0" v-model="juno.MaxAffectRows"></InputNumber>
+                          </FormItem>
+                          <FormItem label="DDL最大影响行数">
+                            <InputNumber :min="0" v-model="juno.MaxDDLAffectRows"></InputNumber>
                           </FormItem>
                           <FormItem label="允许的排列顺序范围">
                             <Input v-model="juno.SupportCollation"></Input>
@@ -177,13 +180,14 @@
                           <FormItem label="建表必须拥有字段">
                             <Input v-model="juno.MustHaveColumns"></Input>
                           </FormItem>
-                          <FormItem label="OSCMinTableSize">
-                            <InputNumber :min="0" v-model="juno.OscSize"  :formatter="value => `${value}m`"></InputNumber>
-                          </FormItem>
+
                         </Form>
                       </Col>
                       <Col span="6">
                         <Form :label-width="150">
+                          <FormItem label="OSCMinTableSize">
+                            <InputNumber :min="0" v-model="juno.OscSize"  :formatter="value => `${value}m`"></InputNumber>
+                          </FormItem>
                           <FormItem label="检查插入语句存在列名">
                             <i-switch size="large" v-model="juno.DMLInsertColumns">
                               <span slot="open">开</span>

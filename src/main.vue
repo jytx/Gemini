@@ -3,9 +3,11 @@
 </style>
 <template>
   <div id="main" class="main" :class="{'main-hide-text': hideMenuText}">
+
     <div
             class="sidebar-menu-con"
             style="width:200px; background:#ffffff"
+            v-if="!hideMenuText"
     >
       <sidebar-menu :menuList="menuList" :iconSize="18"/>
     </div>
@@ -104,7 +106,6 @@
                 spanLeft: 4,
                 spanRight: 20,
                 currentPageName: '',
-                hideMenuText: false,
                 userName: sessionStorage.getItem('user'),
                 showFullScreenBtn: window.navigator.userAgent.indexOf('MSIE') < 0,
                 isFullScreen: false,
@@ -126,6 +127,9 @@
                 set(val) {
                     this.$store.state.stmt = val
                 }
+            },
+            hideMenuText: function () {
+                return this.$store.state.hideMenuText
             }
         },
         methods: {
