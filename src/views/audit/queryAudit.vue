@@ -73,10 +73,6 @@
                         key: 'WorkId'
                     },
                     {
-                        title: '连接名',
-                        key: 'Source'
-                    },
-                    {
                         title: '时间',
                         key: 'Date'
                     },

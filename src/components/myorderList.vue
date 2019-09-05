@@ -87,7 +87,7 @@
 
 <script>
     import axios from 'axios'
-    //
+    import expandRow from './expandTable.vue';
     export default {
         name: 'myorder-list',
         data() {
@@ -124,10 +124,25 @@
                 formItem: {},
                 rollColumn: [
                     {
-                        title: '回滚语句',
+                        type: 'expand',
+                        width: 50,
+                        render: (h, params) => {
+                            return h(expandRow, {
+                                props: {
+                                    row: params.row
+                                }
+                            })
+                        }
+                    },
+                    {
+                        title: '当前检查的sql',
                         key: 'SQL',
-                        tooltip: true
-                    }
+                        render: (h, params) => {
+                            let text = params.row.SQL.substring(0, 80) + '...';
+                            return  h('span', text)
+                        }
+
+                    },
                 ],
                 rollData: []
             }
