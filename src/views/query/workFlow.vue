@@ -20,7 +20,7 @@
               <br>
               4.仅支持查询语句,不可使用非查询语句
               <br>
-              5.已限制最大limit数，如自己输入的limit数大于平台配置的最大limit数则已平台配置的Limit数为准
+              5.已限制最大limit数，如自己输入的limit数大于平台配置的最大limit数则以平台配置的Limit数为准
             </span>
             </Alert>
           </i-col>
