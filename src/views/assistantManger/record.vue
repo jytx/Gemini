@@ -12,7 +12,7 @@
         </p>
         <Form inline ref="queryForm">
           <FormItem>
-            <Input placeholder="工单说明" v-model="find.text" @on-keyup.enter="queryData"></Input>
+            <Input placeholder="工单编号" v-model="find.text" @on-keyup.enter="queryData"></Input>
           </FormItem>
           <FormItem>
             <DatePicker format="yyyy-MM-dd HH:mm" type="datetimerange" placeholder="请选择查询的时间范围"

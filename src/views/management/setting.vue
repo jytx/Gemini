@@ -61,7 +61,7 @@
                 <p slot="title">LDAP设置</p>
                 <Form :label-width="120">
                   <FormItem label="服务地址url">
-                    <Input placeholder="ldap://[ip地址或者域名]:[端口号]" v-model="ldap.url"></Input>
+                    <Input placeholder="[ip地址或者域名]:[端口号]" v-model="ldap.url"></Input>
                   </FormItem>
                   <FormItem label="LDAP管理员DN:">
                     <Input placeholder="请填写管理员DN" v-model="ldap.user"></Input>

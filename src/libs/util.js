@@ -126,7 +126,7 @@ util.auth_notice = function (err) {
         title: '错误',
         desc: text
     })
-}
+};
 
 util.notice = function (vl) {
     Notice.info({

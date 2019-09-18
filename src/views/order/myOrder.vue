@@ -44,9 +44,9 @@
                           title="确定要撤销工单吗？"
                           @on-ok="delOrder(row)"
                           transfer>
-                    <Button type="primary" v-if="row.Status === 2" ghost size="small">工单撤销</Button>
+                    <Button type="primary" v-if="row.Status === 2" ghost size="small" class="margin-left-10">工单撤销</Button>
                   </Poptip>
-                  <Button type="error" @click="orderReject(row)" v-if="row.Status === 0" size="small" ghost>驳回理由
+                  <Button type="error" @click="orderReject(row)" v-if="row.Status === 0" size="small" ghost class="margin-left-10">驳回理由
                   </Button>
                 </div>
               </template>
