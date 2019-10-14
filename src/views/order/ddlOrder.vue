@@ -54,7 +54,7 @@
               </Form-item>
               <Form-item>
                 <Button type="primary" @click="fetchStruct()">获取表结构信息</Button>
-                <Button type="error" @click="canel()" class="margin-left-10">重置</Button>
+                <Button type="error" @click="clearForm()" class="margin-left-10">重置</Button>
               </Form-item>
               <FormItem label="工单提交说明:" prop="text">
                 <Input v-model="formItem.text" placeholder="请输入工单说明" type="textarea" :rows=4></Input>
@@ -131,70 +131,22 @@
     //
     import axios from 'axios'
     import editor from '../../components/editor'
+    import {fetchSth,order} from "../../libs/mixin";
 
     export default {
         components: {
             editor: editor
         },
+        mixins: [fetchSth,order],
         data() {
             return {
-                invalidDate: {
-                    disabledDate(date) {
-                        return date && date.valueOf() < Date.now() - 86400000
-                    }
-                },
-                fetchData: {
-                    idc: [],
-                    source: [],
-                    base: [],
-                    table: [],
-                    assigned: []
-                },
-                ruleValidate: {
-                    idc: [
-                        {
-                            required: true,
-                            message: '环境地址不得为空',
-                            trigger: 'change'
-                        }
-                    ],
-                    source: [
-                        {
-                            required: true,
-                            message: '连接名不得为空',
-                            trigger: 'change'
-                        }
-                    ],
-                    database: [
-                        {
-                            required: true,
-                            message: '数据库名不得为空',
-                            trigger: 'change'
-                        }
-                    ],
-                    text: [
-                        {
-                            required: true,
-                            message: '提交说明不得为空',
-                            trigger: 'blur'
-                        }
-                    ],
-                    assigned: [
-                        {
-                            required: true,
-                            message: '审核人不得为空',
-                            trigger: 'change'
-                        }
-                    ],
-                    backup: {required: true, type: 'number', message: '备份不得为空', trigger: 'change'}
-                },
                 formItem: {
                     text: '',
                     idc: '',
                     source: '',
                     database: '',
                     table: '',
-                    backup: 0,
+                    backup: 1,
                     assigned: '',
                     delay: null
                 },
@@ -202,33 +154,6 @@
                 formDynamic: '',
                 validate_gen: true,
                 wordList: [],
-                testColumns: [
-                    {
-                        title: '阶段',
-                        key: 'Status',
-                        width: '150'
-                    },
-                    {
-                        title: '错误等级',
-                        key: 'Level',
-                        width: '100'
-                    },
-                    {
-                        title: '错误信息',
-                        key: 'Error',
-                        tooltip: true,
-                    },
-                    {
-                        title: '当前检查的sql',
-                        key: 'SQL',
-                        tooltip: true
-                    },
-                    {
-                        title: '影响行数',
-                        key: 'AffectRows',
-                        width: '120'
-                    }
-                ],
                 testResults: [],
                 fieldColumns: [
                     {
@@ -297,68 +222,6 @@
                         this.formDynamic = res.data
                     })
                     .catch(err => this.$config.err_notice(this, err))
-            },
-            setCompletions(editor, session, pos, prefix, callback) {
-                callback(null, this.wordList.map(function (word) {
-                    return {
-                        caption: word.vl,
-                        value: word.vl,
-                        meta: word.meta
-                    }
-                }))
-            },
-            editorInit: function () {
-                require('brace/mode/mysql')
-                require('brace/theme/xcode')
-            },
-            fetchSource(idc) {
-                if (idc) {
-                    axios.get(`${this.$config.url}/fetch/source/${idc}/ddl`)
-                        .then(res => {
-                            if (res.data.x === 'ddl') {
-                                this.fetchData.source = res.data.source;
-                                this.fetchData.assigned = res.data.assigned
-                            } else {
-                                this.$config.notice('非法劫持参数！')
-                            }
-                        })
-                        .catch(error => {
-                            this.$config.err_notice(this, error)
-                        })
-                }
-            },
-            fetchBase(source) {
-                if (source) {
-                    axios.get(`${this.$config.url}/fetch/base/${source}`)
-                        .then(res => {
-                            this.fetchData.base = res.data;
-                        })
-                        .catch(error => {
-                            this.$config.err_notice(this, error)
-                        })
-                }
-            },
-            fetchTable() {
-                if (this.formItem.database) {
-                    axios.put(`${this.$config.url}/fetch/table`, {
-                        'source': this.formItem.source,
-                        'base': this.formItem.database
-                    })
-                        .then(res => {
-                            this.fetchData.table = res.data
-                        }).catch(error => {
-                        this.$config.err_notice(this, error)
-                    })
-                }
-            },
-            fetchIDC() {
-                axios.get(`${this.$config.url}/fetch/idc`)
-                    .then(res => {
-                        this.fetchData.idc = res.data;
-                    })
-                    .catch(error => {
-                        this.$config.err_notice(this, error)
-                    })
             },
             fetchStruct() {
                 this.$refs['formItem'].validate((valid) => {
@@ -454,9 +317,6 @@
                             })
                     }
                 })
-            },
-            canel() {
-                this.formItem = this.$config.clearObj(this.formItem)
             }
         },
         mounted() {

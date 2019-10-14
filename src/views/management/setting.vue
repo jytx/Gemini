@@ -69,12 +69,8 @@
                   <FormItem label="LDAP管理员密码:">
                     <Input placeholder="请填写管理员密码" v-model="ldap.password" type="password"></Input>
                   </FormItem>
-                  <FormItem label="LDAP搜索规则:">
-                    <Select v-model="ldap.type">
-                      <Option :value=1>sAMAccountName</Option>
-                      <Option :value=2>uid</Option>
-                      <Option :value=3>cn</Option>
-                    </Select>
+                  <FormItem label="LDAP_Search filter:">
+                    <Input v-model="ldap.type"></Input>
                   </FormItem>
                   <FormItem label="LDAP_SCBASE:">
                     <Input placeholder="LDAP Search Base" v-model="ldap.sc"></Input>

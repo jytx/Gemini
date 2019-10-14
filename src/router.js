@@ -257,6 +257,15 @@ export const appRouter = [{
         component: resolve => {
           require(['./views/management/roles.vue'], resolve)
         }
+      },
+      {
+        path: 'task',
+        name: 'task',
+        title: 'AutoTask',
+        icon: 'md-sync',
+        component: resolve => {
+          require(['./views/management/autoTask.vue'], resolve)
+        }
       }
     ]
   }

@@ -53,8 +53,8 @@
           数据库详情表
         </p>
         <Input v-model="query.connection_name" placeholder="请填写连接名" style="width: 15%" clearable></Input>
-        <Select v-model="query.computer_room"  placeholder="请填写环境" style="width: 15%" class="margin-left-10">
-          <Option v-for="list in comList" :value="list" :key="list" >{{ list }}</Option>
+        <Select v-model="query.computer_room" placeholder="请填写环境" style="width: 15%" class="margin-left-10">
+          <Option v-for="list in comList" :value="list" :key="list">{{ list }}</Option>
         </Select>
         <Button @click="queryData" type="primary" class="margin-left-10">查询</Button>
         <Button @click="queryCancel" type="warning" class="margin-left-10">重置</Button>
@@ -114,8 +114,17 @@
     import axios from 'axios'
 
     export default {
+
         name: 'sqlist',
         data() {
+            const regExp_Name = (rule, value, callback) => {
+                let pPattern = new RegExp("[`~!@#$^&*()={}':;',\\[\\].<>/?~！@#￥……&*（）——{}【】‘；：”“'。，、？]");
+                if (pPattern.test(this.formItem.name)) {
+                    callback(new Error('特殊字符仅可使用|与-'))
+                } else {
+                    callback()
+                }
+            };
             return {
                 tableData: [],
                 columns: [
@@ -158,11 +167,18 @@
                     add: [
                         {required: true, message: '请选择对应环境', trigger: 'change'}
                     ],
-                    name: [{
-                        required: true,
-                        message: '请填写连接名称',
-                        trigger: 'blur'
-                    }],
+                    name: [
+                        {
+                            required: true,
+                            message: '请填写连接名称',
+                            trigger: 'blur',
+
+                        },
+                        {
+                            validator: regExp_Name,
+                            trigger: 'blur'
+                        }
+                    ],
                     ip: [{
                         required: true,
                         message: '请填写连接地址',

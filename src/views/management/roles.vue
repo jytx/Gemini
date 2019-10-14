@@ -13,7 +13,7 @@
                 <Card>
                   <p slot="title">
                     <Icon type="md-flower"/>
-                    DDL审核规则
+                    审核规则
                   </p>
                   <div>
                     <Row>
@@ -171,10 +171,10 @@
                           <FormItem label="DDL最大影响行数">
                             <InputNumber :min="0" v-model="juno.MaxDDLAffectRows"></InputNumber>
                           </FormItem>
-                          <FormItem label="允许的排列顺序范围">
+                          <FormItem label="允许的Collate范围">
                             <Input v-model="juno.SupportCollation"></Input>
                           </FormItem>
-                          <FormItem label="允许的字符集范围">
+                          <FormItem label="允许的Charset范围">
                             <Input v-model="juno.SupportCharset"></Input>
                           </FormItem>
                           <FormItem label="建表必须拥有字段">

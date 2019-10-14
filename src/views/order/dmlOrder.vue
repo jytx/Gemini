@@ -48,7 +48,7 @@
                   </Select>
                 </FormItem>
 
-                <FormItem label="是否备份" required>
+                <FormItem label="是否备份" prop="backup">
                   <RadioGroup v-model="formItem.backup">
                     <Radio :label=1>是</Radio>
                     <Radio :label=0>否</Radio>
@@ -123,19 +123,15 @@
 <script>
     import axios from 'axios'
     import editor from '../../components/editor'
-
+    import {fetchSth,order} from "../../libs/mixin";
     export default {
         components: {
             editor: editor
         },
+        mixins: [fetchSth,order],
         name: 'SQLsyntax',
         data() {
             return {
-                invalidDate: {
-                    disabledDate(date) {
-                        return date && date.valueOf() < Date.now() - 86400000
-                    }
-                },
                 validate_gen: true,
                 formItem: {
                     text: '',
@@ -143,79 +139,17 @@
                     source: '',
                     database: '',
                     table: '',
-                    backup: 0,
+                    backup: 1,
                     assigned: '',
                     delay: null,
                     textarea: ''
                 },
-                testColumns: [
-                    {
-                        title: '阶段',
-                        key: 'Status',
-                        width: '150'
-                    },
-                    {
-                        title: '错误等级',
-                        key: 'Level',
-                        width: '100'
-                    },
-                    {
-                        title: '错误信息',
-                        key: 'Error',
-                        tooltip: true
-                    },
-                    {
-                        title: '当前检查的sql',
-                        key: 'SQL',
-                        tooltip: true
-                    },
-                    {
-                        title: '影响行数',
-                        key: 'AffectRows',
-                        width: '120'
-                    }
-                ],
                 Testresults: [],
                 item: {},
-                ruleValidate: {
-                    idc: [{
-                        required: true,
-                        message: '环境地址不得为空',
-                        trigger: 'change'
-                    }],
-                    source: [{
-                        required: true,
-                        message: '连接名不得为空',
-                        trigger: 'change'
-                    }],
-                    database: [{
-                        required: true,
-                        message: '数据库名不得为空',
-                        trigger: 'change'
-                    }],
-                    text: [{
-                        required: true,
-                        message: '说明不得为空',
-                        trigger: 'blur'
-                    }
-                    ],
-                    assigned: [{
-                        required: true,
-                        message: '审核人不得为空',
-                        trigger: 'change'
-                    }]
-                },
                 id: null,
                 assigned: [],
                 wordList: [],
-                loading: false,
-                fetchData: {
-                    idc: [],
-                    source: [],
-                    base: [],
-                    table: [],
-                    assigned: []
-                }
+                loading: false
             }
         },
         methods: {
@@ -227,58 +161,6 @@
                         this.formItem.textarea = res.data
                     })
                     .catch(err => this.$config.err_notice(this, err))
-            },
-            setCompletions(editor, session, pos, prefix, callback) {
-                callback(null, this.wordList.map(function (word) {
-                    return {
-                        caption: word.vl,
-                        value: word.vl,
-                        meta: word.meta
-                    }
-                }))
-            },
-            editorInit: function () {
-                require('brace/mode/mysql')
-                require('brace/theme/xcode')
-            },
-            clearForm() {
-                this.formItem = this.$config.clearObj(this.formItem)
-            },
-            fetchIDC() {
-                axios.get(`${this.$config.url}/fetch/idc`)
-                    .then(res => {
-                        this.fetchData.idc = res.data;
-                    })
-                    .catch(error => {
-                        this.$config.err_notice(this, error)
-                    })
-            },
-            fetchSource(idc) {
-                if (idc) {
-                    axios.get(`${this.$config.url}/fetch/source/${idc}/dml`)
-                        .then(res => {
-                            if (res.data.x === 'dml') {
-                                this.fetchData.source = res.data.source;
-                                this.fetchData.assigned = res.data.assigned
-                            } else {
-                                this.$config.notice('非法劫持参数！')
-                            }
-                        })
-                        .catch(error => {
-                            this.$config.err_notice(this, error)
-                        })
-                }
-            },
-            fetchBase(source) {
-                if (source) {
-                    axios.get(`${this.$config.url}/fetch/base/${source}`)
-                        .then(res => {
-                            this.fetchData.base = res.data;
-                        })
-                        .catch(error => {
-                            this.$config.err_notice(this, error)
-                        })
-                }
             },
             testSql() {
                 this.$refs['formItem'].validate((valid) => {

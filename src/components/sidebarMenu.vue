@@ -66,7 +66,8 @@
                     'setting': '0',
                     'authGroup': '0',
                     "perOrder": '0',
-                    'roles': '0'
+                    'roles': '0',
+                    'task': '0'
                 }
             }
         },
@@ -101,7 +102,8 @@
                     this.filtermenulist.setting = s.setting;
                     this.filtermenulist.authGroup = s.group;
                     this.filtermenulist.perOrder = s.perOrder;
-                    this.filtermenulist.roles = s.roles
+                    this.filtermenulist.roles = s.roles;
+                    this.filtermenulist.task = s.task;
                 })
         }
     }
