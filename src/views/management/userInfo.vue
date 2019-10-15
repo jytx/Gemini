@@ -60,13 +60,15 @@
                       v-if="row.id !== 1">更改密码
               </Button>
               <Button type="info" size="small" @click="editAuthModal(row)" class="margin-left-10">详细信息</Button>
-              <Poptip
-                      confirm
-                      title="确定删除改用户吗？"
-                      transfer
-                      @on-ok="delUser(row)">
-                <Button type="warning" size="small" v-if="row.id !== 1" class="margin-left-10">删除</Button>
-              </Poptip>
+              <template v-if="row.Username !== 'admin'">
+                <Poptip
+                        confirm
+                        title="确定删除改用户吗？"
+                        transfer
+                        @on-ok="delUser(row)">
+                  <Button type="warning" size="small" v-if="row.id !== 1" class="margin-left-10">删除</Button>
+                </Poptip>
+              </template>
             </template>
           </Table>
         </div>
