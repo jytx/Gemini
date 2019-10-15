@@ -3,18 +3,18 @@ import Notice from 'iview/src/components/notice'
 import {appRouter} from '../router'
 import axios from 'axios'
 
-let util = {}
+let util = {};
 util.title = function (title) {
-    title = title || 'Yearning SQL审核平台'
+    title = title || 'Yearning SQL审核平台';
     window.document.title = title
-}
+};
 
 util.random = function random(lower, upper) {
     return Math.floor(Math.random() * (upper - lower)) + lower;
 };
 
 util.mode = function (obj) {
-    let oc = {}
+    let oc = {};
     Object.keys(obj).forEach(function (key) {
         if (typeof obj[key] === 'string') {
             if (obj[key] === '1') {
@@ -29,7 +29,7 @@ util.mode = function (obj) {
         } else {
             oc[key] = ''
         }
-    })
+    });
     return oc
 };
 
@@ -116,7 +116,7 @@ util.err_notice = function (vm, err) {
 };
 
 util.auth_notice = function (err) {
-    let text = err
+    let text = err;
     if (err.response !== undefined) {
         if (err.response.status === 401) {
             text = '账号密码错误,请重新输入!'
@@ -164,27 +164,27 @@ util.showThisRoute = function (itAccess, currentAccess) {
 }
 
 util.openPage = function (vm, name) {
-    vm.$router.push({name: name})
-    vm.$store.commit('Breadcrumbset', name)
-    vm.$store.state.currentPageName = name
+    vm.$router.push({name: name});
+    vm.$store.commit('Breadcrumbset', name);
+    vm.$store.state.currentPageName = name;
     util.taglist(vm, name)
-}
+};
 
 util.taglist = function (vm, name) {
     vm.$store.state.pageOpenedList.forEach((vl, index) => {
         if (vl.name === name && name !== 'home_index') {
             vm.$store.state.pageOpenedList.splice(index, 1)
         }
-    })
+    });
     appRouter.forEach((val) => {
         for (let i of val.children) {
             if (i.name === name && name !== 'home_index') {
                 vm.$store.state.pageOpenedList.push({'title': i.title, 'name': i.name})
             }
         }
-    })
+    });
     localStorage.setItem('pageOpenedList', JSON.stringify(vm.$store.state.pageOpenedList))
-}
+};
 
 util.clearObj = function (obj) {
     for (let i in obj) {
@@ -229,13 +229,13 @@ util.clearPicker = function (obj) {
         }
     }
     return obj
-}
+};
 
 util.sameMerge = function (obj, merge, el) {
     for (let i of Object.keys(el)) {
         obj[i] = merge[i]
     }
     return obj
-}
+};
 
 export default util
