@@ -183,7 +183,7 @@
                             })
                         } else {
                             this.fetchIDC();
-                            if (res.data.export) {
+                            if (res.data.export === 0) {
                                 this.export = true
                             }
                         }

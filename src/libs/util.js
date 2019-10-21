@@ -148,11 +148,7 @@ util.auth = '/login';
 util.gen = '';
 
 util.oneOf = function (ele, targetArr) {
-    if (targetArr.indexOf(ele) >= 0) {
-        return true
-    } else {
-        return false
-    }
+    return targetArr.indexOf(ele) >= 0;
 };
 
 util.showThisRoute = function (itAccess, currentAccess) {
