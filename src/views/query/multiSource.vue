@@ -23,7 +23,7 @@
         <Cell v-for="i in fetchData.source" :title="i" :name="i" :key="i"/>
       </CellGroup>
       <div slot="footer">
-        <Button type="success" @click="deferReply">返回</Button>
+        <Button type="success" @click="deferReply">结束查询</Button>
       </div>
     </Modal>
     <Modal v-model="openSnippet" title="新建Snippet" @on-ok="addsnip">
