@@ -209,7 +209,11 @@
                 this.currentTab = vl
             },
             getTable(vl) {
-                this.put_info.base = vl[0].title
+                if (vl[0].children === undefined) {
+                    this.tableInfoName = vl[0].title
+                } else {
+                    this.put_info.base = vl[0].title;
+                }
             },
             handleTabRemove() {
                 if (this.tabs === 1) {
@@ -222,7 +226,7 @@
                 }
             },
             editorInit: function () {
-                require('brace/mode/mysql')
+                require('brace/mode/mysql');
                 require('brace/theme/xcode')
             },
             handleTabsAdd() {
