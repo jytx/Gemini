@@ -28,7 +28,7 @@
                 <Tree
                         :data="data1"
                         @on-toggle-expand="choseName"
-                        @on-select-change="getTbale"
+                        @on-select-change="getTable"
                         @empty-text="数据加载中"
                         class="tree"
                 ></Tree>
@@ -60,15 +60,15 @@
 
 
     <Drawer title="DML语句快速提交" :closable="false" v-model="drawer.open" width="700" transfer>
-      <Form :rules="ruleValidate" ref="referOrder" :model="referOrder">
+      <Form :rules="ruleValidate" ref="formItem" :model="formItem">
         <FormItem label="环境:" prop="idc">
-          <Select v-model="referOrder.idc" @on-change="fetchSource">
+          <Select v-model="formItem.idc" @on-change="fetchSource">
             <Option v-for="i in fetchData.idc" :key="i" :value="i">{{i}}</Option>
           </Select>
         </FormItem>
 
         <FormItem label="连接名:" prop="source">
-          <Select v-model="referOrder.source" @on-change="fetchBase">
+          <Select v-model="formItem.source" @on-change="fetchBase">
             <Option
                     v-for="i in fetchData.source"
                     :value="i"
@@ -79,23 +79,23 @@
         </FormItem>
 
         <FormItem label="库名:" prop="database">
-          <Select v-model="referOrder.database" placeholder="请选择">
+          <Select v-model="formItem.database" placeholder="请选择" @on-change="fetchTable">
             <Option v-for="item in fetchData.base" :value="item" :key="item">{{item}}</Option>
           </Select>
         </FormItem>
 
         <FormItem label="工单说明:" prop="text">
-          <Input v-model="referOrder.text" placeholder="请输入" type="textarea" :rows=4></Input>
+          <Input v-model="formItem.text" placeholder="请输入" type="textarea" :rows=4></Input>
         </FormItem>
 
         <FormItem label="审核人:" prop="assigned">
-          <Select v-model="referOrder.assigned" filterable>
+          <Select v-model="formItem.assigned" filterable>
             <Option v-for="i in fetchData.assigned" :value="i" :key="i">{{i}}</Option>
           </Select>
         </FormItem>
 
         <FormItem label="是否备份" required>
-          <RadioGroup v-model="referOrder.backup">
+          <RadioGroup v-model="formItem.backup">
             <Radio :label=1>是</Radio>
             <Radio :label=0>否</Radio>
           </RadioGroup>
@@ -103,11 +103,11 @@
 
         <FormItem label="定时执行">
           <DatePicker format="yyyy-MM-dd HH:mm" type="datetime" placeholder="选择时间点" :options="invalidDate"
-                      v-model="referOrder.delay" @on-change="referOrder.delay=$event"
+                      v-model="formItem.delay" @on-change="formItem.delay=$event"
                       :editable="false"></DatePicker>
         </FormItem>
         <FormItem>
-          <editor v-model="referOrder.textarea" @init="editorInit" @setCompletions="setCompletions"></editor>
+          <editor v-model="formItem.textarea" @init="editorInit" @setCompletions="setCompletions"></editor>
         </FormItem>
       </Form>
 
@@ -141,18 +141,13 @@
   </div>
 </template>
 <script>
+    import {fetchSth, order} from "../../libs/mixin";
     import axios from 'axios'
     import tabQuery from '../../components/tabQuery'
     import editor from '../../components/editor'
 
-    const concat_ = function (arr1, arr2) {
-        let arr = arr1.concat();
-        for (let i = 0; i < arr2.length; i++) {
-            arr.indexOf(arr2[i]) === -1 ? arr.push(arr2[i]) : 0;
-        }
-        return arr;
-    }
     export default {
+        mixins: [fetchSth, order],
         components: {
             editor: editor,
             tabQuery
@@ -168,72 +163,10 @@
                 tableInfoName: '',
                 testRes: [],
                 loading: false,
-                ruleValidate: {
-                    idc: [{
-                        required: true,
-                        message: '环境地址不得为空',
-                        trigger: 'change'
-                    }],
-                    source: [{
-                        required: true,
-                        message: '连接名不得为空',
-                        trigger: 'change'
-                    }],
-                    database: [{
-                        required: true,
-                        message: '数据库名不得为空',
-                        trigger: 'change'
-                    }],
-                    text: [{
-                        required: true,
-                        message: '说明不得为空',
-                        trigger: 'blur'
-                    }
-                    ],
-                    assigned: [{
-                        required: true,
-                        message: '审核人不得为空',
-                        trigger: 'change'
-                    }]
-                },
-                testColumns: [
-                    {
-                        title: '阶段',
-                        key: 'Status'
-                    },
-                    {
-                        title: '错误等级',
-                        key: 'Level'
-                    },
-                    {
-                        title: '错误信息',
-                        key: 'Error',
-                        tooltip: true
-                    },
-                    {
-                        title: '当前检查的sql',
-                        key: 'SQL',
-                        tooltip: true
-                    },
-                    {
-                        title: '影响行数',
-                        key: 'AffectRows'
-                    }
-                ],
-                fetchData: {
-                    idc: [],
-                    source: [],
-                    base: []
-                },
-                invalidDate: {
-                    disabledDate(date) {
-                        return date && date.valueOf() < Date.now() - 86400000
-                    }
-                },
                 drawer: {
                     open: false
                 },
-                referOrder: {
+                formItem: {
                     textarea: '',
                     backup: 0,
                     text: '',
@@ -265,57 +198,18 @@
             },
             beauty() {
                 axios.put(`${this.$config.url}/query/beauty`, {
-                    'sql': this.referOrder.textarea
+                    'sql': this.formItem.textarea
                 })
                     .then(res => {
-                        this.referOrder.textarea = res.data
+                        this.formItem.textarea = res.data
                     })
                     .catch(err => this.$config.err_notice(this, err))
             },
             cur(vl) {
                 this.currentTab = vl
             },
-            getTbale(vl) {
-                if (vl[0].children) {
-                    return
-                }
-                this.tableInfoName = vl[0].title
-            },
-            fetchIDC() {
-                axios.get(`${this.$config.url}/fetch/idc`)
-                    .then(res => {
-                        this.fetchData.idc = res.data;
-                    })
-                    .catch(error => {
-                        this.$config.err_notice(this, error)
-                    })
-            },
-            fetchSource(idc) {
-                if (idc) {
-                    axios.get(`${this.$config.url}/fetch/source/${idc}/dml`)
-                        .then(res => {
-                            if (res.data.x === 'dml') {
-                                this.fetchData.source = res.data.source;
-                                this.fetchData.assigned = res.data.assigned
-                            } else {
-                                this.$config.notice('非法劫持参数！')
-                            }
-                        })
-                        .catch(error => {
-                            this.$config.err_notice(this, error)
-                        })
-                }
-            },
-            fetchBase(source) {
-                if (source) {
-                    axios.get(`${this.$config.url}/fetch/base/${source}`)
-                        .then(res => {
-                            this.fetchData.base = res.data;
-                        })
-                        .catch(error => {
-                            this.$config.err_notice(this, error)
-                        })
-                }
+            getTable(vl) {
+                this.put_info.base = vl[0].title
             },
             handleTabRemove() {
                 if (this.tabs === 1) {
@@ -335,12 +229,12 @@
                 this.tabs++
             },
             testSql() {
-                this.$refs['referOrder'].validate((valid) => {
+                this.$refs['formItem'].validate((valid) => {
                     if (valid) {
                         this.loading = true;
                         axios.put(`${this.$config.url}/fetch/test`, {
-                            'database': this.referOrder.database,
-                            'sql': this.referOrder.textarea,
+                            'database': this.formItem.database,
+                            'sql': this.formItem.textarea,
                             'isDMl': true,
                             'source': this.data1[0].title
                         })
@@ -369,11 +263,11 @@
                 })
             },
             commitOrder() {
-                this.$refs['referOrder'].validate((valid) => {
+                this.$refs['formItem'].validate((valid) => {
                     if (valid) {
                         axios.post(`${this.$config.url}/sql/refer`, {
-                            'ddl': this.referOrder,
-                            'sql': this.referOrder.textarea,
+                            'ddl': this.formItem,
+                            'sql': this.formItem.textarea,
                             'ty': 1
                         })
                             .then(res => {
@@ -424,7 +318,7 @@
                                 this.$Spin.hide();
                                 return
                             }
-                            this.wordList = concat_(this.wordList, res.data.highlight);
+                            this.wordList = this.$config.concat(this.wordList, res.data.highlight);
                             for (let i = 0; i < this.data1[0].children.length; i++) {
                                 if (this.data1[0].children[i].title === vl.title) {
                                     this.data1[0].children[i].children = res.data.table

@@ -23,7 +23,7 @@
                   }
                 }
               },
-              color: ['#ed7996'],
+              color: ['#63d5c5'],
               grid: {
                 left: '3%',
                 right: '4%',

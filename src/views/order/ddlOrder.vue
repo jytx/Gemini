@@ -201,6 +201,22 @@
             }
         },
         methods: {
+            fetchSource(idc) {
+                if (idc) {
+                    axios.get(`${this.$config.url}/fetch/source/${idc}/ddl`)
+                        .then(res => {
+                            if (res.data.x === 'ddl') {
+                                this.fetchData.source = res.data.source;
+                                this.fetchData.assigned = res.data.assigned
+                            } else {
+                                this.$config.notice('非法劫持参数！')
+                            }
+                        })
+                        .catch(error => {
+                            this.$config.err_notice(this, error)
+                        })
+                }
+            },
             merge() {
                 axios.put(`${this.$config.url}/query/merge`, {
                     'sql': this.formDynamic

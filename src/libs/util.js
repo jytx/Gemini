@@ -234,4 +234,12 @@ util.sameMerge = function (obj, merge, el) {
     return obj
 };
 
+util.concat = function (arr1, arr2) {
+    let arr = arr1.concat();
+    for (let i = 0; i < arr2.length; i++) {
+        arr.indexOf(arr2[i]) === -1 ? arr.push(arr2[i]) : 0;
+    }
+    return arr;
+};
+
 export default util

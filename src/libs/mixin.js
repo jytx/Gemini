@@ -38,9 +38,9 @@ export const fetchSth = {
     methods: {
         fetchSource(idc) {
             if (idc) {
-                axios.get(`${this.$config.url}/fetch/source/${idc}/ddl`)
+                axios.get(`${this.$config.url}/fetch/source/${idc}/dml`)
                     .then(res => {
-                        if (res.data.x === 'ddl') {
+                        if (res.data.x === 'dml') {
                             this.fetchData.source = res.data.source;
                             this.fetchData.assigned = res.data.assigned
                         } else {
@@ -79,7 +79,8 @@ export const fetchSth = {
                     'base': this.formItem.database
                 })
                     .then(res => {
-                        this.fetchData.table = res.data
+                        this.fetchData.table = res.data.table;
+                        this.wordList = this.$config.concat(this.wordList, res.data.highlight);
                     }).catch(error => {
                     this.$config.err_notice(this, error)
                 })
@@ -88,7 +89,7 @@ export const fetchSth = {
     }
 };
 export const order = {
-    data () {
+    data() {
         return {
             testColumns: [
                 {

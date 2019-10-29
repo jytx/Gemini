@@ -38,7 +38,7 @@
                 </Select>
               </FormItem>
 
-              <FormItem label="是否需要导出数据:" prop="export" v-if="this.export">
+              <FormItem label="是否需要导出数据:" prop="export" v-if="export_list">
                 <RadioGroup v-model="formItem.export">
                   <Radio :label=1>是</Radio>
                   <Radio :label=0>否</Radio>
@@ -66,13 +66,15 @@
 <script>
     //
     import axios from 'axios'
+    import {fetchSth} from "../../libs/mixin";
 
     export default {
         name: 'work_flow',
         props: ['msg'],
+        mixins: [fetchSth],
         data() {
             return {
-                export: false,
+                export_list: false,
                 stepData: {
                     title: 'Yearning SQL查询系统',
                     describe: `欢迎你！ ${sessionStorage.getItem('user')}`
@@ -117,23 +119,10 @@
                     idc: '',
                     export: 0,
                     assigned: ''
-                },
-                fetchData: {
-                    idc: [],
-                    assigned: []
                 }
             }
         },
         methods: {
-            fetchIDC() {
-                axios.get(`${this.$config.url}/fetch/idc`)
-                    .then(res => {
-                        this.fetchData.idc = res.data;
-                    })
-                    .catch(error => {
-                        this.$config.err_notice(this, error)
-                    })
-            },
             fetchSource(idc) {
                 if (idc) {
                     axios.get(`${this.$config.url}/fetch/source/${idc}/query`)
@@ -183,9 +172,7 @@
                             })
                         } else {
                             this.fetchIDC();
-                            if (res.data.export === 0) {
-                                this.export = true
-                            }
+                            this.export_list = res.data.export;
                         }
                     })
             }

@@ -33,7 +33,7 @@
                 </FormItem>
 
                 <FormItem label="库名:" prop="database">
-                  <Select v-model="formItem.database" placeholder="请选择">
+                  <Select v-model="formItem.database" placeholder="请选择" @on-change="fetchTable">
                     <Option v-for="item in fetchData.base" :value="item" :key="item">{{item}}</Option>
                   </Select>
                 </FormItem>
@@ -123,12 +123,13 @@
 <script>
     import axios from 'axios'
     import editor from '../../components/editor'
-    import {fetchSth,order} from "../../libs/mixin";
+    import {fetchSth, order} from "../../libs/mixin";
+
     export default {
         components: {
             editor: editor
         },
-        mixins: [fetchSth,order],
+        mixins: [fetchSth, order],
         name: 'SQLsyntax',
         data() {
             return {
