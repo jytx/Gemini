@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="side-bar-menu">
 
     <Menu width="auto" @on-select="currentPageTab" :active-name="currentPageName" accordion>
       <MenuItem name="main">
@@ -110,6 +110,10 @@
 </script>
 
 <style>
+  .side-bar-menu {
+    height: 100%;
+    overflow: scroll;
+  }
   span {
     font-weight: bold;
   }
